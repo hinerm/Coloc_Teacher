@@ -411,6 +411,13 @@ public class Coloc_Teacher implements Command {
             addGaussianNoise(img1, settings.getNoiseStdDev(), rand);
             addGaussianNoise(img2, settings.getNoiseStdDev(), rand);
         }
+        
+        // Display the generated images for user inspection
+        if (!testMode && uiService != null) {
+            uiService.show(name1, channel1);
+            uiService.show(name2, channel2);
+            log.info("Generated synthetic images displayed: " + name1 + " and " + name2);
+        }
     }
 
     /**
