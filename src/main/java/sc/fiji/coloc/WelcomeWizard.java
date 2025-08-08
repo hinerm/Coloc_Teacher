@@ -30,39 +30,39 @@ import org.scijava.widget.TextWidget;
 /**
  * Welcome wizard step: Introduction and choice between synthetic or user images
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Welcome")
-public class WelcomeWizard extends WizardStep {
+@Plugin( type = Command.class, name = "Coloc Teacher: Welcome" )
+public class WelcomeWizard extends WizardStep
+{
 
-    @Parameter(label = "Welcome to Coloc Teacher!", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = "Welcome to Coloc Teacher!", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String welcomeMessage = "<html><h2>Welcome to Coloc Teacher!</h2>" +
-               "<p>This wizard will guide you through the parameters and concepts of colocalization analysis " +
-               "using the Coloc2 plugin. Colocalization analysis helps you understand how much two different " +
-               "fluorescent signals overlap in your images.</p>" +
-               "<br>" +
-               "<p><b>What you'll learn:</b></p>" +
-               "<ul>" +
-               "<li>How to interpret colocalization statistics (Pearson's, Manders', etc.)</li>" +
-               "<li>When to use Costes significance testing</li>" +
-               "<li>How different parameters affect your results</li>" +
-               "<li>How to avoid common pitfalls in colocalization analysis</li>" +
-               "</ul>" +
-               "<br>" +
-               "<p><b>Choose your approach:</b></p>" +
-               "<p>• <b>Synthetic images:</b> We'll create controlled test images where you know the ground truth</p>" +
-               "<p>• <b>Your own images:</b> Use your existing two-channel fluorescence images. You <b>must</b> have at least two images open before clicking OK.</p>" +
-               "</html>";
+            "<p>This wizard will guide you through the parameters and concepts of colocalization analysis " +
+            "using the Coloc2 plugin. Colocalization analysis helps you understand how much two different " +
+            "fluorescent signals overlap in your images.</p>" +
+            "<br>" +
+            "<p><b>What you'll learn:</b></p>" +
+            "<ul>" +
+            "<li>How to interpret colocalization statistics (Pearson's, Manders', etc.)</li>" +
+            "<li>When to use Costes significance testing</li>" +
+            "<li>How different parameters affect your results</li>" +
+            "<li>How to avoid common pitfalls in colocalization analysis</li>" +
+            "</ul>" +
+            "<br>" +
+            "<p><b>Choose your approach:</b></p>" +
+            "<p>• <b>Synthetic images:</b> We'll create controlled test images where you know the ground truth</p>" +
+            "<p>• <b>Your own images:</b> Use your existing two-channel fluorescence images. You <b>must</b> have at least two images open before clicking OK.</p>"
+            +
+            "</html>";
 
-    @Parameter(label = " ", style = "separator", 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = " ", style = "separator", persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String separator = "";
 
-    @Parameter(label = "Use synthetic images for demonstration?", 
-               description = "If checked, we'll create synthetic test images. If unchecked, you'll select your own images.")
+    @Parameter( label = "Use synthetic images for demonstration?", description = "If checked, we'll create synthetic test images. If unchecked, you'll select your own images." )
     public boolean useSyntheticImages = true;
 
     @Override
-    public String getStepTitle() {
+    public String getStepTitle()
+    {
         return "Welcome to Coloc Teacher";
     }
 }

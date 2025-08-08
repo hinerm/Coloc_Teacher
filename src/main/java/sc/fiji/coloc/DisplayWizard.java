@@ -21,44 +21,44 @@
  */
 package sc.fiji.coloc;
 
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.TextWidget;
-import org.scijava.ItemVisibility;
 
 /**
  * Wizard step: Configure display and visualization options
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Display Options")
-public class DisplayWizard extends WizardStep {
+@Plugin( type = Command.class, name = "Coloc Teacher: Display Options" )
+public class DisplayWizard extends WizardStep
+{
 
-    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = "Educational Information", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String educationalContent = "<html><p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
-               "<p><b>Display options:</b><br>" +
-               "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
-               "• <b>Generate scatterplot:</b> 2D histogram of pixel intensities</p>" +
-               "<p><b>Interpreting scatterplots:</b><br>" +
-               "• Diagonal line pattern = positive correlation<br>" +
-               "• Horizontal/vertical spread = poor correlation<br>" +
-               "• Tight clusters = good correlation in that intensity range</p>" +
-               "<p>For teaching purposes, it's recommended to show all visualizations " +
-               "to better understand how the algorithms work.</p>" +
-               "<p><b>Choose your display preferences:</b></p></html>";
+            "<p><b>Display options:</b><br>" +
+            "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
+            "• <b>Generate scatterplot:</b> 2D histogram of pixel intensities</p>" +
+            "<p><b>Interpreting scatterplots:</b><br>" +
+            "• Diagonal line pattern = positive correlation<br>" +
+            "• Horizontal/vertical spread = poor correlation<br>" +
+            "• Tight clusters = good correlation in that intensity range</p>" +
+            "<p>For teaching purposes, it's recommended to show all visualizations " +
+            "to better understand how the algorithms work.</p>" +
+            "<p><b>Choose your display preferences:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator", 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = " ", style = "separator", persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String separator = "";
 
-    @Parameter(label = "Display intermediate images", 
-               description = "Show threshold images and processing steps")
+    @Parameter( label = "Display intermediate images", description = "Show threshold images and processing steps" )
     public boolean displayImages = true;
 
-    @Parameter(label = "Generate scatterplot", 
-               description = "2D histogram showing pixel intensity correlation")
+    @Parameter( label = "Generate scatterplot", description = "2D histogram showing pixel intensity correlation" )
     public boolean useScatterplot = true;
 
     @Override
-    public String getStepTitle() { return "Display Options"; }
+    public String getStepTitle()
+    {
+        return "Display Options";
+    }
 }

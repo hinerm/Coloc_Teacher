@@ -21,9 +21,11 @@
  */
 package sc.fiji.coloc;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.scijava.Context;
@@ -35,121 +37,130 @@ import net.imagej.Dataset;
  *
  * @author Mark Hiner
  */
-public class Coloc_TeacherTest {
+public class Coloc_TeacherTest
+{
 
     private Context context;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         context = new Context();
     }
 
     @After
-    public void tearDown() {
-        if (context != null) {
+    public void tearDown()
+    {
+        if ( context != null )
+        {
             context.dispose();
         }
     }
 
     @Test
-    public void testPluginInstantiation() {
+    public void testPluginInstantiation()
+    {
         Coloc_Teacher plugin = new Coloc_Teacher();
-        assertNotNull("Plugin should be instantiated", plugin);
+        assertNotNull( "Plugin should be instantiated", plugin );
     }
-    
+
     @Test
-    public void testPluginExecutionWithTestMode() {
+    public void testPluginExecutionWithTestMode()
+    {
         // Create plugin in test mode
-        Coloc_Teacher plugin = new Coloc_Teacher(true);
-        
+        Coloc_Teacher plugin = new Coloc_Teacher( true );
+
         // Inject context dependencies
-        context.inject(plugin);
-        
+        context.inject( plugin );
+
         // Run the plugin
         plugin.run();
-        
+
         // Test outputs using getters
         Dataset ch1 = plugin.getChannel1();
         Dataset ch2 = plugin.getChannel2();
         String guide = plugin.getInterpretationGuide();
-        
-        assertNotNull("Channel 1 should be generated", ch1);
-        assertNotNull("Channel 2 should be generated", ch2);
-        assertNotNull("Interpretation guide should be generated", guide);
-        
+
+        assertNotNull( "Channel 1 should be generated", ch1 );
+        assertNotNull( "Channel 2 should be generated", ch2 );
+        assertNotNull( "Interpretation guide should be generated", guide );
+
         // Verify image dimensions (using default values in test mode)
-        assertEquals("Channel 1 width should match default", 256L, ch1.dimension(0));
-        assertEquals("Channel 1 height should match default", 256L, ch1.dimension(1));
-        assertEquals("Channel 2 width should match default", 256L, ch2.dimension(0));
-        assertEquals("Channel 2 height should match default", 256L, ch2.dimension(1));
-        
+        assertEquals( "Channel 1 width should match default", 256L, ch1.dimension( 0 ) );
+        assertEquals( "Channel 1 height should match default", 256L, ch1.dimension( 1 ) );
+        assertEquals( "Channel 2 width should match default", 256L, ch2.dimension( 0 ) );
+        assertEquals( "Channel 2 height should match default", 256L, ch2.dimension( 1 ) );
+
         // Verify interpretation guide contains expected content
-        assertTrue("Should contain correlation analysis", guide.contains("correlation"));
-        assertTrue("Should contain colocalization info", guide.contains("colocalization"));
+        assertTrue( "Should contain correlation analysis", guide.contains( "correlation" ) );
+        assertTrue( "Should contain colocalization info", guide.contains( "colocalization" ) );
     }
-    
+
     @Test
-    public void testSettingsAccess() {
+    public void testSettingsAccess()
+    {
         // Create plugin in test mode
-        Coloc_Teacher plugin = new Coloc_Teacher(true);
-        
+        Coloc_Teacher plugin = new Coloc_Teacher( true );
+
         // Inject context dependencies
-        context.inject(plugin);
-        
+        context.inject( plugin );
+
         // Run the plugin
         plugin.run();
-        
+
         // Test settings access
         WizardSettings settings = plugin.getSettings();
-        assertNotNull("Settings should be accessible", settings);
-        
+        assertNotNull( "Settings should be accessible", settings );
+
         // Verify default settings values
-        assertEquals("Default number of spots", 50, settings.getNumSpots());
-        assertEquals("Default spot radius", 5.0, settings.getSpotRadius(), 0.01);
-        assertEquals("Default overlap fraction", 0.7, settings.getOverlapFraction(), 0.01);
-        assertEquals("Default image width", 256, settings.getWidth());
-        assertEquals("Default image height", 256, settings.getHeight());
-        assertTrue("Noise should be enabled by default", settings.isAddNoise());
-        assertEquals("Default noise std dev", 10.0, settings.getNoiseStdDev(), 0.01);
+        assertEquals( "Default number of spots", 50, settings.getNumSpots() );
+        assertEquals( "Default spot radius", 5.0, settings.getSpotRadius(), 0.01 );
+        assertEquals( "Default overlap fraction", 0.7, settings.getOverlapFraction(), 0.01 );
+        assertEquals( "Default image width", 256, settings.getWidth() );
+        assertEquals( "Default image height", 256, settings.getHeight() );
+        assertTrue( "Noise should be enabled by default", settings.isAddNoise() );
+        assertEquals( "Default noise std dev", 10.0, settings.getNoiseStdDev(), 0.01 );
     }
-    
+
     @Test
-    public void testMultipleExecutions() {
+    public void testMultipleExecutions()
+    {
         // Test that multiple executions work correctly
-        Coloc_Teacher plugin1 = new Coloc_Teacher(true);
-        context.inject(plugin1);
+        Coloc_Teacher plugin1 = new Coloc_Teacher( true );
+        context.inject( plugin1 );
         plugin1.run();
-        
-        Coloc_Teacher plugin2 = new Coloc_Teacher(true);
-        context.inject(plugin2);
+
+        Coloc_Teacher plugin2 = new Coloc_Teacher( true );
+        context.inject( plugin2 );
         plugin2.run();
-        
+
         // Both should generate valid outputs
         Dataset ch1_1 = plugin1.getChannel1();
         Dataset ch1_2 = plugin2.getChannel1();
-        
-        assertNotNull("First execution should generate channel 1", ch1_1);
-        assertNotNull("Second execution should generate channel 1", ch1_2);
-        
+
+        assertNotNull( "First execution should generate channel 1", ch1_1 );
+        assertNotNull( "Second execution should generate channel 1", ch1_2 );
+
         // Outputs should be independent (different objects)
-        assertNotSame("Outputs should be independent", ch1_1, ch1_2);
+        assertNotSame( "Outputs should be independent", ch1_1, ch1_2 );
     }
-    
+
     @Test
-    public void testInterpretationGuideContent() {
-        Coloc_Teacher plugin = new Coloc_Teacher(true);
-        context.inject(plugin);
+    public void testInterpretationGuideContent()
+    {
+        Coloc_Teacher plugin = new Coloc_Teacher( true );
+        context.inject( plugin );
         plugin.run();
-        
+
         String guide = plugin.getInterpretationGuide();
-        assertNotNull("Interpretation guide should not be null", guide);
-        
+        assertNotNull( "Interpretation guide should not be null", guide );
+
         // Check for key educational content
-        assertTrue("Guide should contain Pearson's R explanation", guide.contains("Pearson's R"));
-        assertTrue("Guide should contain Li's ICQ explanation", guide.contains("Li's ICQ"));
-        assertTrue("Guide should contain Manders' explanation", guide.contains("Manders'"));
-        assertTrue("Guide should contain Kendall's tau explanation", guide.contains("Kendall's tau"));
-        assertTrue("Guide should mention colocalization level", guide.contains("colocalization"));
-        assertTrue("Guide should contain synthetic data parameters", guide.contains("SYNTHETIC DATA PARAMETERS"));
+        assertTrue( "Guide should contain Pearson's R explanation", guide.contains( "Pearson's R" ) );
+        assertTrue( "Guide should contain Li's ICQ explanation", guide.contains( "Li's ICQ" ) );
+        assertTrue( "Guide should contain Manders' explanation", guide.contains( "Manders'" ) );
+        assertTrue( "Guide should contain Kendall's tau explanation", guide.contains( "Kendall's tau" ) );
+        assertTrue( "Guide should mention colocalization level", guide.contains( "colocalization" ) );
+        assertTrue( "Guide should contain synthetic data parameters", guide.contains( "SYNTHETIC DATA PARAMETERS" ) );
     }
 }

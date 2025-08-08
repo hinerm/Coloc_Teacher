@@ -21,17 +21,18 @@
  */
 package sc.fiji.coloc;
 
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.ui.UIService;
-import org.scijava.ItemVisibility;
 import org.scijava.widget.TextWidget;
 
 /**
  * Abstract base class for wizard steps in the Coloc Teacher plugin.
  * Provides common functionality for step progression, cancellation, and educational content display.
  */
-public abstract class WizardStep implements Command {
+public abstract class WizardStep implements Command
+{
 
     /**
      * HACK: Workaround because when we try to set this programmatically
@@ -42,9 +43,8 @@ public abstract class WizardStep implements Command {
 
     @Parameter
     private UIService uiService;
-    
-    @Parameter(label = "Wizard Progress", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+
+    @Parameter( label = "Wizard Progress", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String wizardProgress = PROGRESS_MESSAGE;
 
     // Cancellation flag - will be set by dialog result
@@ -53,14 +53,16 @@ public abstract class WizardStep implements Command {
     /**
      * Callback method for cancel button
      */
-    protected void cancelWizard() {
+    protected void cancelWizard()
+    {
         cancelled = true;
     }
 
     /**
      * Set cancellation status
      */
-    public void setCancelled(boolean cancelled) {
+    public void setCancelled( boolean cancelled )
+    {
         this.cancelled = cancelled;
     }
 
@@ -68,7 +70,8 @@ public abstract class WizardStep implements Command {
      * Check if the wizard step was cancelled
      * @return true if cancelled, false otherwise
      */
-    public boolean isCancelled() {
+    public boolean isCancelled()
+    {
         return cancelled;
     }
 
@@ -79,7 +82,8 @@ public abstract class WizardStep implements Command {
     public abstract String getStepTitle();
 
     @Override
-    public void run() {
+    public void run()
+    {
         // Subclasses can override this for additional functionality
     }
 }

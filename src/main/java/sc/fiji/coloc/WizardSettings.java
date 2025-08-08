@@ -32,97 +32,100 @@ import ij.ImagePlus;
  * 
  * @author Mark Hiner
  */
-public class WizardSettings {
-    
+public class WizardSettings
+{
+
     // === Wizard Flow Parameters ===
-    
+
     /** Whether to use synthetic images (true) or user-provided images (false) */
     private boolean useSyntheticImages = true;
-    
+
     /** User-selected channel 1 image (only used when useSyntheticImages is false) */
     private ImagePlus userChannel1Image;
-    
+
     /** User-selected channel 2 image (only used when useSyntheticImages is false) */
     private ImagePlus userChannel2Image;
-    
+
     // === Synthetic Image Parameters ===
-    
+
     /** Number of synthetic spots to generate in each channel */
     private int numSpots = 50;
-    
+
     /** Radius of each synthetic spot in pixels */
     private double spotRadius = 5.0;
-    
+
     /** Fraction of spots that overlap between channels (0.0 to 1.0) */
     private double overlapFraction = 0.7;
-    
+
     /** Whether to add Gaussian noise to the synthetic images */
     private boolean addNoise = true;
-    
+
     /** Standard deviation of Gaussian noise to add */
     private double noiseStdDev = 10.0;
-    
+
     /** Base intensity value for background pixels */
     private int baseIntensity = 30;
-    
+
     /** Maximum intensity value for spot pixels */
     private int maxIntensity = 200;
-    
+
     /** Width of generated images in pixels */
     private int width = 256;
-    
+
     /** Height of generated images in pixels */
     private int height = 256;
-    
+
     // === Costes Significance Test Parameters ===
-    
+
     /** Number of randomizations to perform for Costes significance test */
     private int nrCostesRandomisations = 100;
-    
+
     /** Point spread function value for Costes test */
     private double psf = 3.0;
-    
+
     /** Whether to perform Costes significance test */
     private boolean useCostes = true;
-    
+
     // === Statistical Analysis Parameters ===
-    
+
     /** Whether to calculate Manders' colocalization coefficients */
     private boolean useManders = true;
-    
+
     /** Whether to calculate Li's Intensity Correlation Quotient (ICQ) */
     private boolean useLiICQ = true;
-    
+
     /** Whether to calculate Spearman rank correlation coefficient */
     private boolean useSpearmanRank = true;
-    
+
     /** Whether to calculate Kendall's tau correlation coefficient */
     private boolean useKendallTau = false;
-    
+
     // === Display Options ===
-    
+
     /** Whether to generate and display scatterplot */
     private boolean useScatterplot = true;
-    
+
     /** Whether to display the generated synthetic images */
     private boolean displayImages = false;
-    
+
     /** Whether to display shuffled images from Costes test */
     private boolean displayShuffledCostes = false;
-    
+
     /**
      * Default constructor with sensible default values.
      */
-    public WizardSettings() {
+    public WizardSettings()
+    {
         // All fields are already initialized with defaults above
     }
-    
+
     /**
      * Copy constructor for creating a duplicate of existing settings.
      * 
      * @param other the settings to copy
      */
-    public WizardSettings(WizardSettings other) {
+    public WizardSettings( WizardSettings other )
+    {
         this.numSpots = other.getNumSpots();
         this.spotRadius = other.getSpotRadius();
         this.overlapFraction = other.getOverlapFraction();
@@ -132,314 +135,383 @@ public class WizardSettings {
         this.maxIntensity = other.getMaxIntensity();
         this.width = other.getWidth();
         this.height = other.getHeight();
-        
+
         this.nrCostesRandomisations = other.getNrCostesRandomisations();
         this.psf = other.getPsf();
         this.useCostes = other.isUseCostes();
-        
+
         this.useManders = other.isUseManders();
         this.useLiICQ = other.isUseLiICQ();
         this.useSpearmanRank = other.isUseSpearmanRank();
         this.useKendallTau = other.isUseKendallTau();
-        
+
         this.useScatterplot = other.isUseScatterplot();
         this.displayImages = other.isDisplayImages();
         this.displayShuffledCostes = other.isDisplayShuffledCostes();
     }
-    
+
     /**
      * Validates the settings and returns any validation errors.
      * 
      * @return null if valid, or error message if invalid
      */
-    public String validate() {
-        if (numSpots <= 0) {
+    public String validate()
+    {
+        if ( numSpots <= 0 )
+        {
             return "Number of spots must be positive";
         }
-        if (spotRadius <= 0) {
+        if ( spotRadius <= 0 )
+        {
             return "Spot radius must be positive";
         }
-        if (overlapFraction < 0.0 || overlapFraction > 1.0) {
+        if ( overlapFraction < 0.0 || overlapFraction > 1.0 )
+        {
             return "Overlap fraction must be between 0.0 and 1.0";
         }
-        if (noiseStdDev < 0) {
+        if ( noiseStdDev < 0 )
+        {
             return "Noise standard deviation cannot be negative";
         }
-        if (baseIntensity < 0 || maxIntensity < 0) {
+        if ( baseIntensity < 0 || maxIntensity < 0 )
+        {
             return "Intensity values cannot be negative";
         }
-        if (baseIntensity >= maxIntensity) {
+        if ( baseIntensity >= maxIntensity )
+        {
             return "Base intensity must be less than maximum intensity";
         }
-        if (width <= 0 || height <= 0) {
+        if ( width <= 0 || height <= 0 )
+        {
             return "Image dimensions must be positive";
         }
-        if (nrCostesRandomisations <= 0) {
+        if ( nrCostesRandomisations <= 0 )
+        {
             return "Number of Costes randomisations must be positive";
         }
-        if (psf <= 0) {
+        if ( psf <= 0 )
+        {
             return "PSF value must be positive";
         }
-        
+
         return null; // No validation errors
     }
-    
+
     // === Getters and Setters ===
-    
+
     // Wizard Flow Parameters
-    
-    public boolean isUseSyntheticImages() {
+
+    public boolean isUseSyntheticImages()
+    {
         return useSyntheticImages;
     }
-    
-    public void setUseSyntheticImages(boolean useSyntheticImages) {
+
+    public void setUseSyntheticImages( boolean useSyntheticImages )
+    {
         this.useSyntheticImages = useSyntheticImages;
     }
-    
-    public ImagePlus getUserChannel1Image() {
+
+    public ImagePlus getUserChannel1Image()
+    {
         return userChannel1Image;
     }
-    
-    public void setUserChannel1Image(ImagePlus userChannel1Image) {
+
+    public void setUserChannel1Image( ImagePlus userChannel1Image )
+    {
         this.userChannel1Image = userChannel1Image;
     }
-    
-    public ImagePlus getUserChannel2Image() {
+
+    public ImagePlus getUserChannel2Image()
+    {
         return userChannel2Image;
     }
-    
-    public void setUserChannel2Image(ImagePlus userChannel2Image) {
+
+    public void setUserChannel2Image( ImagePlus userChannel2Image )
+    {
         this.userChannel2Image = userChannel2Image;
     }
-    
+
     // Synthetic Image Parameters
-    
-    public int getNumSpots() {
+
+    public int getNumSpots()
+    {
         return numSpots;
     }
-    
-    public void setNumSpots(int numSpots) {
-        if (numSpots <= 0) {
-            throw new IllegalArgumentException("Number of spots must be positive");
+
+    public void setNumSpots( int numSpots )
+    {
+        if ( numSpots <= 0 )
+        {
+            throw new IllegalArgumentException( "Number of spots must be positive" );
         }
         this.numSpots = numSpots;
     }
-    
-    public double getSpotRadius() {
+
+    public double getSpotRadius()
+    {
         return spotRadius;
     }
-    
-    public void setSpotRadius(double spotRadius) {
-        if (spotRadius <= 0) {
-            throw new IllegalArgumentException("Spot radius must be positive");
+
+    public void setSpotRadius( double spotRadius )
+    {
+        if ( spotRadius <= 0 )
+        {
+            throw new IllegalArgumentException( "Spot radius must be positive" );
         }
         this.spotRadius = spotRadius;
     }
-    
-    public double getOverlapFraction() {
+
+    public double getOverlapFraction()
+    {
         return overlapFraction;
     }
-    
-    public void setOverlapFraction(double overlapFraction) {
-        if (overlapFraction < 0.0 || overlapFraction > 1.0) {
-            throw new IllegalArgumentException("Overlap fraction must be between 0.0 and 1.0");
+
+    public void setOverlapFraction( double overlapFraction )
+    {
+        if ( overlapFraction < 0.0 || overlapFraction > 1.0 )
+        {
+            throw new IllegalArgumentException( "Overlap fraction must be between 0.0 and 1.0" );
         }
         this.overlapFraction = overlapFraction;
     }
-    
-    public boolean isAddNoise() {
+
+    public boolean isAddNoise()
+    {
         return addNoise;
     }
-    
-    public void setAddNoise(boolean addNoise) {
+
+    public void setAddNoise( boolean addNoise )
+    {
         this.addNoise = addNoise;
     }
-    
-    public double getNoiseStdDev() {
+
+    public double getNoiseStdDev()
+    {
         return noiseStdDev;
     }
-    
-    public void setNoiseStdDev(double noiseStdDev) {
-        if (noiseStdDev < 0) {
-            throw new IllegalArgumentException("Noise standard deviation cannot be negative");
+
+    public void setNoiseStdDev( double noiseStdDev )
+    {
+        if ( noiseStdDev < 0 )
+        {
+            throw new IllegalArgumentException( "Noise standard deviation cannot be negative" );
         }
         this.noiseStdDev = noiseStdDev;
     }
-    
-    public int getBaseIntensity() {
+
+    public int getBaseIntensity()
+    {
         return baseIntensity;
     }
-    
-    public void setBaseIntensity(int baseIntensity) {
-        if (baseIntensity < 0) {
-            throw new IllegalArgumentException("Base intensity cannot be negative");
+
+    public void setBaseIntensity( int baseIntensity )
+    {
+        if ( baseIntensity < 0 )
+        {
+            throw new IllegalArgumentException( "Base intensity cannot be negative" );
         }
-        if (baseIntensity >= maxIntensity) {
-            throw new IllegalArgumentException("Base intensity must be less than maximum intensity");
+        if ( baseIntensity >= maxIntensity )
+        {
+            throw new IllegalArgumentException( "Base intensity must be less than maximum intensity" );
         }
         this.baseIntensity = baseIntensity;
     }
-    
-    public int getMaxIntensity() {
+
+    public int getMaxIntensity()
+    {
         return maxIntensity;
     }
-    
-    public void setMaxIntensity(int maxIntensity) {
-        if (maxIntensity < 0) {
-            throw new IllegalArgumentException("Maximum intensity cannot be negative");
+
+    public void setMaxIntensity( int maxIntensity )
+    {
+        if ( maxIntensity < 0 )
+        {
+            throw new IllegalArgumentException( "Maximum intensity cannot be negative" );
         }
-        if (baseIntensity >= maxIntensity) {
-            throw new IllegalArgumentException("Maximum intensity must be greater than base intensity");
+        if ( baseIntensity >= maxIntensity )
+        {
+            throw new IllegalArgumentException( "Maximum intensity must be greater than base intensity" );
         }
         this.maxIntensity = maxIntensity;
     }
-    
-    public int getWidth() {
+
+    public int getWidth()
+    {
         return width;
     }
-    
-    public void setWidth(int width) {
-        if (width <= 0) {
-            throw new IllegalArgumentException("Image width must be positive");
+
+    public void setWidth( int width )
+    {
+        if ( width <= 0 )
+        {
+            throw new IllegalArgumentException( "Image width must be positive" );
         }
         this.width = width;
     }
-    
-    public int getHeight() {
+
+    public int getHeight()
+    {
         return height;
     }
-    
-    public void setHeight(int height) {
-        if (height <= 0) {
-            throw new IllegalArgumentException("Image height must be positive");
+
+    public void setHeight( int height )
+    {
+        if ( height <= 0 )
+        {
+            throw new IllegalArgumentException( "Image height must be positive" );
         }
         this.height = height;
     }
-    
+
     // Costes Parameters
-    
-    public int getNrCostesRandomisations() {
+
+    public int getNrCostesRandomisations()
+    {
         return nrCostesRandomisations;
     }
-    
-    public void setNrCostesRandomisations(int nrCostesRandomisations) {
-        if (nrCostesRandomisations <= 0) {
-            throw new IllegalArgumentException("Number of Costes randomisations must be positive");
+
+    public void setNrCostesRandomisations( int nrCostesRandomisations )
+    {
+        if ( nrCostesRandomisations <= 0 )
+        {
+            throw new IllegalArgumentException( "Number of Costes randomisations must be positive" );
         }
         this.nrCostesRandomisations = nrCostesRandomisations;
     }
-    
-    public double getPsf() {
+
+    public double getPsf()
+    {
         return psf;
     }
-    
-    public void setPsf(double psf) {
-        if (psf <= 0) {
-            throw new IllegalArgumentException("PSF value must be positive");
+
+    public void setPsf( double psf )
+    {
+        if ( psf <= 0 )
+        {
+            throw new IllegalArgumentException( "PSF value must be positive" );
         }
         this.psf = psf;
     }
-    
-    public boolean isUseCostes() {
+
+    public boolean isUseCostes()
+    {
         return useCostes;
     }
-    
-    public void setUseCostes(boolean useCostes) {
+
+    public void setUseCostes( boolean useCostes )
+    {
         this.useCostes = useCostes;
     }
-    
+
     // Statistical Analysis Parameters
-    
-    public boolean isUseManders() {
+
+    public boolean isUseManders()
+    {
         return useManders;
     }
-    
-    public void setUseManders(boolean useManders) {
+
+    public void setUseManders( boolean useManders )
+    {
         this.useManders = useManders;
     }
-    
-    public boolean isUseLiICQ() {
+
+    public boolean isUseLiICQ()
+    {
         return useLiICQ;
     }
-    
-    public void setUseLiICQ(boolean useLiICQ) {
+
+    public void setUseLiICQ( boolean useLiICQ )
+    {
         this.useLiICQ = useLiICQ;
     }
-    
-    public boolean isUseSpearmanRank() {
+
+    public boolean isUseSpearmanRank()
+    {
         return useSpearmanRank;
     }
-    
-    public void setUseSpearmanRank(boolean useSpearmanRank) {
+
+    public void setUseSpearmanRank( boolean useSpearmanRank )
+    {
         this.useSpearmanRank = useSpearmanRank;
     }
-    
-    public boolean isUseKendallTau() {
+
+    public boolean isUseKendallTau()
+    {
         return useKendallTau;
     }
-    
-    public void setUseKendallTau(boolean useKendallTau) {
+
+    public void setUseKendallTau( boolean useKendallTau )
+    {
         this.useKendallTau = useKendallTau;
     }
-    
+
     // Display Options
-    
-    public boolean isUseScatterplot() {
+
+    public boolean isUseScatterplot()
+    {
         return useScatterplot;
     }
-    
-    public void setUseScatterplot(boolean useScatterplot) {
+
+    public void setUseScatterplot( boolean useScatterplot )
+    {
         this.useScatterplot = useScatterplot;
     }
-    
-    public boolean isDisplayImages() {
+
+    public boolean isDisplayImages()
+    {
         return displayImages;
     }
-    
-    public void setDisplayImages(boolean displayImages) {
+
+    public void setDisplayImages( boolean displayImages )
+    {
         this.displayImages = displayImages;
     }
-    
-    public boolean isDisplayShuffledCostes() {
+
+    public boolean isDisplayShuffledCostes()
+    {
         return displayShuffledCostes;
     }
-    
-    public void setDisplayShuffledCostes(boolean displayShuffledCostes) {
+
+    public void setDisplayShuffledCostes( boolean displayShuffledCostes )
+    {
         this.displayShuffledCostes = displayShuffledCostes;
     }
-    
+
     /**
      * Returns a summary string describing the key settings.
      * 
      * @return human-readable summary of settings
      */
-    public String getSummary() {
+    public String getSummary()
+    {
         StringBuilder sb = new StringBuilder();
-        sb.append("Synthetic Image Settings:\n");
-        sb.append("  Spots: ").append(getNumSpots()).append("\n");
-        sb.append("  Radius: ").append(getSpotRadius()).append(" pixels\n");
-        sb.append("  Overlap: ").append((int)(getOverlapFraction() * 100)).append("%\n");
-        sb.append("  Size: ").append(getWidth()).append("x").append(getHeight()).append("\n");
-        sb.append("  Noise: ").append(isAddNoise() ? getNoiseStdDev() + " std dev" : "none").append("\n");
-        
-        sb.append("\nAnalysis Settings:\n");
-        sb.append("  Costes test: ").append(isUseCostes() ? getNrCostesRandomisations() + " randomizations" : "disabled").append("\n");
-        sb.append("  Manders: ").append(isUseManders() ? "enabled" : "disabled").append("\n");
-        sb.append("  Li ICQ: ").append(isUseLiICQ() ? "enabled" : "disabled").append("\n");
-        sb.append("  Spearman: ").append(isUseSpearmanRank() ? "enabled" : "disabled").append("\n");
-        sb.append("  Kendall tau: ").append(isUseKendallTau() ? "enabled" : "disabled").append("\n");
-        
+        sb.append( "Synthetic Image Settings:\n" );
+        sb.append( "  Spots: " ).append( getNumSpots() ).append( "\n" );
+        sb.append( "  Radius: " ).append( getSpotRadius() ).append( " pixels\n" );
+        sb.append( "  Overlap: " ).append( ( int ) ( getOverlapFraction() * 100 ) ).append( "%\n" );
+        sb.append( "  Size: " ).append( getWidth() ).append( "x" ).append( getHeight() ).append( "\n" );
+        sb.append( "  Noise: " ).append( isAddNoise() ? getNoiseStdDev() + " std dev" : "none" ).append( "\n" );
+
+        sb.append( "\nAnalysis Settings:\n" );
+        sb.append( "  Costes test: " ).append( isUseCostes() ? getNrCostesRandomisations() + " randomizations" : "disabled" )
+                .append( "\n" );
+        sb.append( "  Manders: " ).append( isUseManders() ? "enabled" : "disabled" ).append( "\n" );
+        sb.append( "  Li ICQ: " ).append( isUseLiICQ() ? "enabled" : "disabled" ).append( "\n" );
+        sb.append( "  Spearman: " ).append( isUseSpearmanRank() ? "enabled" : "disabled" ).append( "\n" );
+        sb.append( "  Kendall tau: " ).append( isUseKendallTau() ? "enabled" : "disabled" ).append( "\n" );
+
         return sb.toString();
     }
-    
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "WizardSettings{" +
                 "spots=" + getNumSpots() +
                 ", radius=" + getSpotRadius() +
-                ", overlap=" + (int)(getOverlapFraction() * 100) + "%" +
+                ", overlap=" + ( int ) ( getOverlapFraction() * 100 ) + "%" +
                 ", size=" + getWidth() + "x" + getHeight() +
-                ", noise=" + (isAddNoise() ? getNoiseStdDev() : "none") +
+                ", noise=" + ( isAddNoise() ? getNoiseStdDev() : "none" ) +
                 '}';
     }
 }

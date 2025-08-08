@@ -31,56 +31,52 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step: Configure synthetic image parameters
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Synthetic Image Setup")
-public class SyntheticImageWizard extends WizardStep {
+@Plugin( type = Command.class, name = "Coloc Teacher: Synthetic Image Setup" )
+public class SyntheticImageWizard extends WizardStep
+{
 
-    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = "Educational Information", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String educationalContent = "<html><p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
-               "This controlled approach lets you:</p>" +
-               "<ul>" +
-               "<li>Know the ground truth (actual overlap)</li>" +
-               "<li>Test how different parameters affect results</li>" +
-               "<li>Learn to interpret colocalization statistics</li>" +
-               "</ul>" +
-               "<p><b>Key Parameters:</b><br>" +
-               "• <b>Overlap fraction:</b> What percentage of spots overlap between channels<br>" +
-               "&nbsp;&nbsp;- 0.0 = No overlap (perfect segregation)<br>" +
-               "&nbsp;&nbsp;- 0.5 = Half the spots overlap<br>" +
-               "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
-               "<p><b>Configure your synthetic images:</b></p></html>";
+            "This controlled approach lets you:</p>" +
+            "<ul>" +
+            "<li>Know the ground truth (actual overlap)</li>" +
+            "<li>Test how different parameters affect results</li>" +
+            "<li>Learn to interpret colocalization statistics</li>" +
+            "</ul>" +
+            "<p><b>Key Parameters:</b><br>" +
+            "• <b>Overlap fraction:</b> What percentage of spots overlap between channels<br>" +
+            "&nbsp;&nbsp;- 0.0 = No overlap (perfect segregation)<br>" +
+            "&nbsp;&nbsp;- 0.5 = Half the spots overlap<br>" +
+            "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
+            "<p><b>Configure your synthetic images:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator", 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = " ", style = "separator", persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String separator = "";
 
-    @Parameter(label = "Image width (pixels)", min = "64", max = "1024", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "32")
+    @Parameter( label = "Image width (pixels)", min = "64", max = "1024", style = NumberWidget.SPINNER_STYLE, stepSize = "32" )
     public int width = 256;
 
-    @Parameter(label = "Image height (pixels)", min = "64", max = "1024", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "32")
+    @Parameter( label = "Image height (pixels)", min = "64", max = "1024", style = NumberWidget.SPINNER_STYLE, stepSize = "32" )
     public int height = 256;
 
-    @Parameter(label = "Number of spots", min = "5", max = "200", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "5")
+    @Parameter( label = "Number of spots", min = "5", max = "200", style = NumberWidget.SPINNER_STYLE, stepSize = "5" )
     public int numSpots = 50;
 
-    @Parameter(label = "Spot radius (pixels)", min = "2.0", max = "20.0", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "0.5")
+    @Parameter( label = "Spot radius (pixels)", min = "2.0", max = "20.0", style = NumberWidget.SPINNER_STYLE, stepSize = "0.5" )
     public double spotRadius = 5.0;
 
-    @Parameter(label = "Overlap fraction (0.0-1.0)", min = "0.0", max = "1.0", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "0.1")
+    @Parameter( label = "Overlap fraction (0.0-1.0)", min = "0.0", max = "1.0", style = NumberWidget.SPINNER_STYLE, stepSize = "0.1" )
     public double overlapFraction = 0.7;
 
-    @Parameter(label = "Add Gaussian noise", description = "Adds realistic noise to images")
+    @Parameter( label = "Add Gaussian noise", description = "Adds realistic noise to images" )
     public boolean addNoise = true;
 
-    @Parameter(label = "Noise standard deviation", min = "0.0", max = "50.0", 
-               style = NumberWidget.SPINNER_STYLE, stepSize = "1.0")
+    @Parameter( label = "Noise standard deviation", min = "0.0", max = "50.0", style = NumberWidget.SPINNER_STYLE, stepSize = "1.0" )
     public double noiseStdDev = 10.0;
 
     @Override
-    public String getStepTitle() { return "Synthetic Image Setup"; }
+    public String getStepTitle()
+    {
+        return "Synthetic Image Setup";
+    }
 }

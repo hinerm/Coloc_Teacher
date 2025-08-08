@@ -21,55 +21,53 @@
  */
 package sc.fiji.coloc;
 
-import ij.ImagePlus;
-
 import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.TextWidget;
 
+import ij.ImagePlus;
+
 /**
  * Image selection wizard step: Choose two images for colocalization analysis
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Select Images")
-public class ImageSelectionWizard extends WizardStep {
+@Plugin( type = Command.class, name = "Coloc Teacher: Select Images" )
+public class ImageSelectionWizard extends WizardStep
+{
 
-    @Parameter(label = "Image Selection Instructions", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = "Image Selection Instructions", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String instructionMessage = "<html><p>Select the two images you want to analyze for colocalization. " +
-               "These should be two-channel fluorescence images or separate single-channel images.</p>" +
-               "<br>" +
-               "<p><b>Requirements:</b></p>" +
-               "<ul>" +
-               "<li>Images should be the same size (width × height)</li>" +
-               "<li>Images should represent the same field of view</li>" +
-               "<li>Ideally, images should be properly registered (aligned)</li>" +
-               "<li>Background should be subtracted if necessary</li>" +
-               "</ul>" +
-               "<br>" +
-               "<p><b>Tips:</b></p>" +
-               "<ul>" +
-               "<li>Channel 1 is often called the 'reference' channel</li>" +
-               "<li>Channel 2 is the channel you're testing for colocalization with Channel 1</li>" +
-               "<li>Make sure both images are open in ImageJ before running this wizard</li>" +
-               "</ul>" +
-               "</html>";
+            "These should be two-channel fluorescence images or separate single-channel images.</p>" +
+            "<br>" +
+            "<p><b>Requirements:</b></p>" +
+            "<ul>" +
+            "<li>Images should be the same size (width × height)</li>" +
+            "<li>Images should represent the same field of view</li>" +
+            "<li>Ideally, images should be properly registered (aligned)</li>" +
+            "<li>Background should be subtracted if necessary</li>" +
+            "</ul>" +
+            "<br>" +
+            "<p><b>Tips:</b></p>" +
+            "<ul>" +
+            "<li>Channel 1 is often called the 'reference' channel</li>" +
+            "<li>Channel 2 is the channel you're testing for colocalization with Channel 1</li>" +
+            "<li>Make sure both images are open in ImageJ before running this wizard</li>" +
+            "</ul>" +
+            "</html>";
 
-    @Parameter(label = " ", style = "separator", 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = " ", style = "separator", persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String separator = "";
 
-    @Parameter(label = "Channel 1 (Reference)", 
-               description = "Select the first channel/image for colocalization analysis")
+    @Parameter( label = "Channel 1 (Reference)", description = "Select the first channel/image for colocalization analysis" )
     public ImagePlus channel1Image;
 
-    @Parameter(label = "Channel 2 (Test)", 
-               description = "Select the second channel/image for colocalization analysis")
+    @Parameter( label = "Channel 2 (Test)", description = "Select the second channel/image for colocalization analysis" )
     public ImagePlus channel2Image;
 
     @Override
-    public String getStepTitle() {
+    public String getStepTitle()
+    {
         return "Select Images for Analysis";
     }
 }

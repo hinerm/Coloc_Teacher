@@ -21,50 +21,48 @@
  */
 package sc.fiji.coloc;
 
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.TextWidget;
-import org.scijava.ItemVisibility;
 
 /**
  * Wizard step: Choose statistical methods for colocalization analysis
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Statistical Methods")
-public class StatisticsWizard extends WizardStep {
+@Plugin( type = Command.class, name = "Coloc Teacher: Statistical Methods" )
+public class StatisticsWizard extends WizardStep
+{
 
-    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = "Educational Information", style = TextWidget.AREA_STYLE, persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String educationalContent = "<html><p>Different statistical measures reveal different aspects of colocalization. " +
-               "Understanding when to use each method is key to proper analysis.</p>" +
-               "<p><b>Correlation-based measures:</b><br>" +
-               "• <b>Spearman's rank:</b> Non-parametric correlation, robust to outliers<br>" +
-               "• <b>Kendall's tau:</b> Alternative non-parametric correlation for small datasets</p>" +
-               "<p><b>Overlap-based measures:</b><br>" +
-               "• <b>Manders' coefficients:</b> Fraction of pixels that overlap<br>" +
-               "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
-               "<p><b>Choose the methods appropriate for your research:</b></p></html>";
+            "Understanding when to use each method is key to proper analysis.</p>" +
+            "<p><b>Correlation-based measures:</b><br>" +
+            "• <b>Spearman's rank:</b> Non-parametric correlation, robust to outliers<br>" +
+            "• <b>Kendall's tau:</b> Alternative non-parametric correlation for small datasets</p>" +
+            "<p><b>Overlap-based measures:</b><br>" +
+            "• <b>Manders' coefficients:</b> Fraction of pixels that overlap<br>" +
+            "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
+            "<p><b>Choose the methods appropriate for your research:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator", 
-               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    @Parameter( label = " ", style = "separator", persist = false, required = false, visibility = ItemVisibility.MESSAGE )
     private String separator = "";
 
-    @Parameter(label = "Use Li's ICQ (Intensity Correlation Quotient)", 
-               description = "Compares intensity correlation to random distribution")
+    @Parameter( label = "Use Li's ICQ (Intensity Correlation Quotient)", description = "Compares intensity correlation to random distribution" )
     public boolean useLiICQ = true;
 
-    @Parameter(label = "Use Spearman's rank correlation", 
-               description = "Non-parametric correlation, robust to outliers")
+    @Parameter( label = "Use Spearman's rank correlation", description = "Non-parametric correlation, robust to outliers" )
     public boolean useSpearmanRank = true;
 
-    @Parameter(label = "Use Manders' coefficients", 
-               description = "Fraction of each channel that overlaps with the other")
+    @Parameter( label = "Use Manders' coefficients", description = "Fraction of each channel that overlaps with the other" )
     public boolean useManders = true;
 
-    @Parameter(label = "Use Kendall's tau", 
-               description = "Alternative non-parametric correlation coefficient")
+    @Parameter( label = "Use Kendall's tau", description = "Alternative non-parametric correlation coefficient" )
     public boolean useKendallTau = true;
 
     @Override
-    public String getStepTitle() { return "Statistical Methods"; }
+    public String getStepTitle()
+    {
+        return "Statistical Methods";
+    }
 }
