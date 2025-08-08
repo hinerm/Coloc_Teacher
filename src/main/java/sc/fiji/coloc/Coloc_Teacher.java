@@ -134,109 +134,133 @@ public class Coloc_Teacher implements Command {
         }
     }
     
+    /**
+     * Helper function to generate wizard progress text
+     * @param stepNumber current step number (1-based)
+     * @param totalSteps total number of steps
+     * @return formatted progress string
+     */
+    private String createProgressText(int stepNumber, int totalSteps) {
+        return "Step " + stepNumber + " of " + totalSteps;
+    }
+
+    /**
+     * Creates a cancellation message for the wizard.
+     * @param currentStep the current step number
+     * @return a cancellation message string
+     */
+    private String createCancellationText(int currentStep) {
+        return "Wizard cancelled by user at step " + currentStep;
+    }
+    
+    /**
+     * Runs the wizard to collect user input.
+     * @throws Exception
+     */
     private void runWizard() throws Exception {
-        // Note: Step numbers and total steps are now configurable parameters
-        // This allows for flexible reordering of steps or adding new ones without
-        // modifying the individual wizard step classes.
-        // Example: To add a new step, just update totalSteps to 5 and insert the new step
+        // Define wizard structure
+        final int totalSteps = 4;
+        int currentStep = 1;
         
-        // Step 1: Synthetic Image Setup
-        log.info("Step 1: Configuring synthetic image parameters...");
+        // Synthetic Image Setup
+        log.info("Step " + currentStep + ": Configuring synthetic image parameters...");
         
-        CommandModule step1Module;
+        CommandModule syntheticModule;
         try {
-            step1Module = commandService.run(SyntheticImageWizard.class, true, 
-                "stepNumber", 1, "totalSteps", 4).get();
+            syntheticModule = commandService.run(SyntheticImageWizard.class, true,
+                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
         } catch (Exception e) {
-            log.info("Wizard cancelled by user at step 1");
+            log.info(createCancellationText(currentStep));
             return;
         }
         
         // Check if cancelled
-        if (step1Module == null || step1Module.isCanceled()) {
-            log.info("Wizard cancelled by user at step 1");
+        if (syntheticModule == null || syntheticModule.isCanceled()) {
+            log.info(createCancellationText(currentStep));
             return;
         }
         
         // Get the parameters from the completed wizard step
-        SyntheticImageWizard step1 = (SyntheticImageWizard) step1Module.getCommand();
-        settings.setWidth(step1.width);
-        settings.setHeight(step1.height);
-        settings.setNumSpots(step1.numSpots);
-        settings.setSpotRadius(step1.spotRadius);
-        settings.setOverlapFraction(step1.overlapFraction);
-        settings.setAddNoise(step1.addNoise);
-        settings.setNoiseStdDev(step1.noiseStdDev);
-        
-        // Step 2: Costes Test Setup
-        log.info("Step 2: Configuring Costes significance test...");
-        
-        CommandModule step2Module;
+        SyntheticImageWizard syntheticResult = (SyntheticImageWizard) syntheticModule.getCommand();
+        settings.setWidth(syntheticResult.width);
+        settings.setHeight(syntheticResult.height);
+        settings.setNumSpots(syntheticResult.numSpots);
+        settings.setSpotRadius(syntheticResult.spotRadius);
+        settings.setOverlapFraction(syntheticResult.overlapFraction);
+        settings.setAddNoise(syntheticResult.addNoise);
+        settings.setNoiseStdDev(syntheticResult.noiseStdDev);
+
+        // Costes Test Setup
+        currentStep++;
+        log.info("Step " + currentStep + ": Configuring Costes significance test...");
+
+        CommandModule costesModule;
         try {
-            step2Module = commandService.run(CostesWizard.class, true, 
-                "stepNumber", 2, "totalSteps", 4).get();
+            costesModule = commandService.run(CostesWizard.class, true, 
+                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
         } catch (Exception e) {
-            log.info("Wizard cancelled by user at step 2");
+            log.info(createCancellationText(currentStep));
             return;
         }
         
         // Check if cancelled
-        if (step2Module == null || step2Module.isCanceled()) {
-            log.info("Wizard cancelled by user at step 2");
+        if (costesModule == null || costesModule.isCanceled()) {
+            log.info(createCancellationText(currentStep));
             return;
         }
         
-        CostesWizard step2 = (CostesWizard) step2Module.getCommand();
-        settings.setUseCostes(step2.useCostes);
-        settings.setNrCostesRandomisations(step2.nrCostesRandomisations);
-        settings.setPsf(step2.psf);
-        settings.setDisplayShuffledCostes(step2.displayShuffledCostes);
-        
-        // Step 3: Statistical Methods
-        log.info("Step 3: Selecting statistical methods...");
-        
-        CommandModule step3Module;
+        CostesWizard costesResult = (CostesWizard) costesModule.getCommand();
+        settings.setUseCostes(costesResult.useCostes);
+        settings.setNrCostesRandomisations(costesResult.nrCostesRandomisations);
+        settings.setPsf(costesResult.psf);
+        settings.setDisplayShuffledCostes(costesResult.displayShuffledCostes);
+
+        // Statistical Methods
+        currentStep++;
+        log.info("Step " + currentStep + ": Selecting statistical methods...");
+
+        CommandModule statsModule;
         try {
-            step3Module = commandService.run(StatisticsWizard.class, true, 
-                "stepNumber", 3, "totalSteps", 4).get();
+            statsModule = commandService.run(StatisticsWizard.class, true,
+                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
         } catch (Exception e) {
-            log.info("Wizard cancelled by user at step 3");
+            log.info(createCancellationText(currentStep));
             return;
         }
         
         // Check if cancelled
-        if (step3Module == null || step3Module.isCanceled()) {
-            log.info("Wizard cancelled by user at step 3");
+        if (statsModule == null || statsModule.isCanceled()) {
+            log.info(createCancellationText(currentStep));
             return;
         }
         
-        StatisticsWizard step3 = (StatisticsWizard) step3Module.getCommand();
-        settings.setUseLiICQ(step3.useLiICQ);
-        settings.setUseSpearmanRank(step3.useSpearmanRank);
-        settings.setUseManders(step3.useManders);
-        settings.setUseKendallTau(step3.useKendallTau);
-        
-        // Step 4: Display Options
-        log.info("Step 4: Configuring display options...");
-        
-        CommandModule step4Module;
+        StatisticsWizard statsResult = (StatisticsWizard) statsModule.getCommand();
+        settings.setUseLiICQ(statsResult.useLiICQ);
+        settings.setUseSpearmanRank(statsResult.useSpearmanRank);
+        settings.setUseManders(statsResult.useManders);
+        settings.setUseKendallTau(statsResult.useKendallTau);
+
+        // Display Options
+        log.info("Step " + currentStep + ": Configuring display options...");
+
+        CommandModule displayModule;
         try {
-            step4Module = commandService.run(DisplayWizard.class, true, 
-                "stepNumber", 4, "totalSteps", 4).get();
+            displayModule = commandService.run(DisplayWizard.class, true,
+                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
         } catch (Exception e) {
-            log.info("Wizard cancelled by user at step 4");
+            log.info(createCancellationText(currentStep));
             return;
         }
         
         // Check if cancelled
-        if (step4Module == null || step4Module.isCanceled()) {
-            log.info("Wizard cancelled by user at step 4");
+        if (displayModule == null || displayModule.isCanceled()) {
+            log.info(createCancellationText(currentStep));
             return;
         }
         
-        DisplayWizard step4 = (DisplayWizard) step4Module.getCommand();
-        settings.setDisplayImages(step4.displayImages);
-        settings.setUseScatterplot(step4.useScatterplot);
+        DisplayWizard displayResult = (DisplayWizard) displayModule.getCommand();
+        settings.setDisplayImages(displayResult.displayImages);
+        settings.setUseScatterplot(displayResult.useScatterplot);
         
         // Now execute the analysis with collected settings
         log.info("Wizard complete. Starting analysis with selected parameters...");
