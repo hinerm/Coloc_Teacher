@@ -54,8 +54,9 @@ public class StatisticsWizard extends WizardStep {
                "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
                "<p><b>Choose the methods appropriate for your research:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator")
-    private String separator2 = "";
+    @Parameter(label = " ", style = "separator", 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String separator = "";
 
     @Parameter(label = "Use Li's ICQ (Intensity Correlation Quotient)", 
                description = "Compares intensity correlation to random distribution")

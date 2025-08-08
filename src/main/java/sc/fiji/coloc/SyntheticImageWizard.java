@@ -54,8 +54,9 @@ public class SyntheticImageWizard extends WizardStep {
                "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
                "<p><b>Configure your synthetic images:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator")
-    private String separator2 = "";
+    @Parameter(label = " ", style = "separator", 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String separator = "";
 
     @Override
     public int getStepNumber() { return 1; }

@@ -34,9 +34,6 @@ public abstract class WizardStep implements Command {
     @Parameter
     private UIService uiService;
 
-    @Parameter(label = " ", style = "separator")
-    private String separator1 = "";
-
     // Cancellation flag - will be set by dialog result
     private boolean cancelled = false;
 

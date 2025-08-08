@@ -56,8 +56,9 @@ public class DisplayWizard extends WizardStep {
                "to better understand how the algorithms work.</p>" +
                "<p><b>Choose your display preferences:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator")
-    private String separator2 = "";
+    @Parameter(label = " ", style = "separator", 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String separator = "";
 
     @Parameter(label = "Display intermediate images", 
                description = "Show threshold images and processing steps")

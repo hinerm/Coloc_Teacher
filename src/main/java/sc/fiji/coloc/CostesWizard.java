@@ -58,8 +58,9 @@ public class CostesWizard extends WizardStep {
                "• <b>Display shuffled:</b> Show examples of randomized data</p>" +
                "<p><b>Configure significance testing:</b></p></html>";
 
-    @Parameter(label = " ", style = "separator")
-    private String separator2 = "";
+    @Parameter(label = " ", style = "separator", 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String separator = "";
 
     @Parameter(label = "Perform Costes significance test", 
                description = "Statistical test for significance of colocalization")
