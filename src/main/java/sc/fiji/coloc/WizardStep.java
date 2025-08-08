@@ -24,6 +24,8 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.ui.UIService;
+import org.scijava.ItemVisibility;
+import org.scijava.widget.TextWidget;
 
 /**
  * Abstract base class for wizard steps in the Coloc Teacher plugin.
@@ -33,6 +35,16 @@ public abstract class WizardStep implements Command {
 
     @Parameter
     private UIService uiService;
+    
+    @Parameter(persist = false, required = false)
+    private Integer stepNumber;
+    
+    @Parameter(persist = false, required = false)
+    private Integer totalSteps;
+    
+    @Parameter(label = "Wizard Progress", style = TextWidget.AREA_STYLE, 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    protected String wizardProgress = "";
 
     // Cancellation flag - will be set by dialog result
     private boolean cancelled = false;
@@ -63,13 +75,17 @@ public abstract class WizardStep implements Command {
      * Get the step number for this wizard step
      * @return step number (1-based)
      */
-    public abstract int getStepNumber();
+    public int getStepNumber() {
+        return stepNumber != null ? stepNumber : -1;
+    }
 
     /**
      * Get the total number of steps in the wizard
      * @return total number of steps
      */
-    public abstract int getTotalSteps();
+    public int getTotalSteps() {
+        return totalSteps != null ? totalSteps : -1;
+    }
 
     /**
      * Get the step title (without step numbering)
@@ -79,6 +95,8 @@ public abstract class WizardStep implements Command {
 
     @Override
     public void run() {
+        // Set the wizard progress after parameters are injected
+        wizardProgress = "Step " + getStepNumber() + " of " + getTotalSteps();
         // Subclasses can override this for additional functionality
     }
 }

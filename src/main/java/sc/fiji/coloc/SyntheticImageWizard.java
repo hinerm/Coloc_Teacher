@@ -31,7 +31,7 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step 1: Configure synthetic image parameters
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 1 of 4 - Synthetic Image Setup")
+@Plugin(type = Command.class, name = "Coloc Teacher: Synthetic Image Setup")
 public class SyntheticImageWizard extends WizardStep {
 
     @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
@@ -53,15 +53,6 @@ public class SyntheticImageWizard extends WizardStep {
     @Parameter(label = " ", style = "separator", 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
     private String separator = "";
-
-    @Override
-    public int getStepNumber() { return 1; }
-
-    @Override
-    public int getTotalSteps() { return 4; }
-
-    @Override
-    public String getStepTitle() { return "Synthetic Image Setup"; }
 
     @Parameter(label = "Image width (pixels)", min = "64", max = "1024", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "32")
@@ -89,4 +80,7 @@ public class SyntheticImageWizard extends WizardStep {
     @Parameter(label = "Noise standard deviation", min = "0.0", max = "50.0", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "1.0")
     public double noiseStdDev = 10.0;
+
+    @Override
+    public String getStepTitle() { return "Synthetic Image Setup"; }
 }

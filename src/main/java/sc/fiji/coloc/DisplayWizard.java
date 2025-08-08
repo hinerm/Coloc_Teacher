@@ -30,17 +30,8 @@ import org.scijava.ItemVisibility;
 /**
  * Wizard step 4: Configure display and visualization options
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 4 of 4 - Display Options")
+@Plugin(type = Command.class, name = "Coloc Teacher: Display Options")
 public class DisplayWizard extends WizardStep {
-
-    @Override
-    public int getStepNumber() { return 4; }
-
-    @Override
-    public int getTotalSteps() { return 4; }
-
-    @Override
-    public String getStepTitle() { return "Display Options"; }
 
     @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
@@ -67,4 +58,7 @@ public class DisplayWizard extends WizardStep {
     @Parameter(label = "Generate scatterplot", 
                description = "2D histogram showing pixel intensity correlation")
     public boolean useScatterplot = true;
+
+    @Override
+    public String getStepTitle() { return "Display Options"; }
 }

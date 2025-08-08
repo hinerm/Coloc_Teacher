@@ -30,17 +30,8 @@ import org.scijava.ItemVisibility;
 /**
  * Wizard step 3: Choose statistical methods for colocalization analysis
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 3 of 4 - Statistical Methods")
+@Plugin(type = Command.class, name = "Coloc Teacher: Statistical Methods")
 public class StatisticsWizard extends WizardStep {
-
-    @Override
-    public int getStepNumber() { return 3; }
-
-    @Override
-    public int getTotalSteps() { return 4; }
-
-    @Override
-    public String getStepTitle() { return "Statistical Methods"; }
 
     @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
@@ -73,4 +64,7 @@ public class StatisticsWizard extends WizardStep {
     @Parameter(label = "Use Kendall's tau", 
                description = "Alternative non-parametric correlation coefficient")
     public boolean useKendallTau = true;
+
+    @Override
+    public String getStepTitle() { return "Statistical Methods"; }
 }

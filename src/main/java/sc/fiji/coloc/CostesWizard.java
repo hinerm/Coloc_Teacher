@@ -31,17 +31,8 @@ import org.scijava.ItemVisibility;
 /**
  * Wizard step 2: Configure Costes significance test parameters
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 2 of 4 - Costes Significance Test")
+@Plugin(type = Command.class, name = "Coloc Teacher: Costes Significance Test")
 public class CostesWizard extends WizardStep {
-
-    @Override
-    public int getStepNumber() { return 2; }
-
-    @Override
-    public int getTotalSteps() { return 4; }
-
-    @Override
-    public String getStepTitle() { return "Costes Significance Test"; }
 
     @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
@@ -79,4 +70,7 @@ public class CostesWizard extends WizardStep {
     @Parameter(label = "Display shuffled images", 
                description = "Show examples of the randomized images used in test")
     public boolean displayShuffledCostes = false;
+
+    @Override
+    public String getStepTitle() { return "Costes Significance Test"; }
 }

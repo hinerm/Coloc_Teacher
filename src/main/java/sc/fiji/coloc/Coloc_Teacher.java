@@ -135,12 +135,18 @@ public class Coloc_Teacher implements Command {
     }
     
     private void runWizard() throws Exception {
+        // Note: Step numbers and total steps are now configurable parameters
+        // This allows for flexible reordering of steps or adding new ones without
+        // modifying the individual wizard step classes.
+        // Example: To add a new step, just update totalSteps to 5 and insert the new step
+        
         // Step 1: Synthetic Image Setup
         log.info("Step 1: Configuring synthetic image parameters...");
         
         CommandModule step1Module;
         try {
-            step1Module = commandService.run(SyntheticImageWizard.class, true).get();
+            step1Module = commandService.run(SyntheticImageWizard.class, true, 
+                "stepNumber", 1, "totalSteps", 4).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 1");
             return;
@@ -167,7 +173,8 @@ public class Coloc_Teacher implements Command {
         
         CommandModule step2Module;
         try {
-            step2Module = commandService.run(CostesWizard.class, true).get();
+            step2Module = commandService.run(CostesWizard.class, true, 
+                "stepNumber", 2, "totalSteps", 4).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 2");
             return;
@@ -190,7 +197,8 @@ public class Coloc_Teacher implements Command {
         
         CommandModule step3Module;
         try {
-            step3Module = commandService.run(StatisticsWizard.class, true).get();
+            step3Module = commandService.run(StatisticsWizard.class, true, 
+                "stepNumber", 3, "totalSteps", 4).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 3");
             return;
@@ -213,7 +221,8 @@ public class Coloc_Teacher implements Command {
         
         CommandModule step4Module;
         try {
-            step4Module = commandService.run(DisplayWizard.class, true).get();
+            step4Module = commandService.run(DisplayWizard.class, true, 
+                "stepNumber", 4, "totalSteps", 4).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 4");
             return;
