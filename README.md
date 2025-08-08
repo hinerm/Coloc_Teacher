@@ -2,6 +2,22 @@
 
 Educational Fiji plugin for teaching colocalization analysis with both synthetic data generation and real image analysis, featuring a comprehensive guided wizard interface.
 
+## LLM Use
+
+This repository was built in VS Code using GitHub Copilot with Claude Sonnet 4 in agentic mode.
+
+It started with the creation of a Python ImageJ script wrapping the `Colocalisation_Analysis` script template, and then was adapted into an ImageJ2-style Java plugin.
+
+A full record of the conversation can be found in [ColocTeacherChat.md](doc/chats/ColocTeacherChat.md).
+
+### Adding future chats
+
+1. Right-click the chat window and click `Copy All`
+1. Paste into a `.txt` file in `doc/chats`
+1. From the `doc/chats` directory, run `python convert-chat.py yourFile.txt`
+
+You can then remove the `.txt` file and update the `README` as appropriate!
+
 ## Overview
 
 Coloc Teacher is an educational plugin that extends the functionality of Fiji's Coloc_2 plugin by:
