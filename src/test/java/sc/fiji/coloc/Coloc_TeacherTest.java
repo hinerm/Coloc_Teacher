@@ -23,31 +23,25 @@ package sc.fiji.coloc;
 
 import static org.junit.Assert.*;
 
-import java.util.concurrent.ExecutionException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.command.CommandService;
-import org.scijava.module.Module;
 
 import net.imagej.Dataset;
 
 /**
- * Tests for the Coloc_Teacher plugin using ImageJ2 Command testing patterns.
+ * Tests for the Coloc_Teacher plugin using direct instantiation and getters.
  *
- * @author Your Name
+ * @author Mark Hiner
  */
 public class Coloc_TeacherTest {
 
     private Context context;
-    private CommandService commandService;
 
     @Before
     public void setUp() {
         context = new Context();
-        commandService = context.getService(CommandService.class);
     }
 
     @After
@@ -64,17 +58,20 @@ public class Coloc_TeacherTest {
     }
     
     @Test
-    public void testCommandExecution() throws InterruptedException, ExecutionException {
-        // Test the command in test mode (bypasses wizard)
-        Module module = commandService.run(Coloc_Teacher.class, true,
-            "testMode", true).get();
+    public void testPluginExecutionWithTestMode() {
+        // Create plugin in test mode
+        Coloc_Teacher plugin = new Coloc_Teacher(true);
         
-        assertNotNull("Module should be executed", module);
+        // Inject context dependencies
+        context.inject(plugin);
         
-        // Check outputs
-        Dataset ch1 = (Dataset) module.getOutput("channel1");
-        Dataset ch2 = (Dataset) module.getOutput("channel2");
-        String guide = (String) module.getOutput("interpretationGuide");
+        // Run the plugin
+        plugin.run();
+        
+        // Test outputs using getters
+        Dataset ch1 = plugin.getChannel1();
+        Dataset ch2 = plugin.getChannel2();
+        String guide = plugin.getInterpretationGuide();
         
         assertNotNull("Channel 1 should be generated", ch1);
         assertNotNull("Channel 2 should be generated", ch2);
@@ -92,33 +89,59 @@ public class Coloc_TeacherTest {
     }
     
     @Test
-    public void testDifferentColocalizationLevels() throws InterruptedException, ExecutionException {
-        // Test with high colocalization - just test that it executes in test mode
-        Module highColoc = commandService.run(Coloc_Teacher.class, true,
-            "testMode", true).get();
+    public void testSettingsAccess() {
+        // Create plugin in test mode
+        Coloc_Teacher plugin = new Coloc_Teacher(true);
         
-        assertNotNull("High colocalization module should execute", highColoc);
+        // Inject context dependencies
+        context.inject(plugin);
         
-        // Test with low colocalization - another test in test mode
-        Module lowColoc = commandService.run(Coloc_Teacher.class, true,
-            "testMode", true).get();
+        // Run the plugin
+        plugin.run();
         
-        assertNotNull("Low colocalization module should execute", lowColoc);
+        // Test settings access
+        Coloc_Teacher.WizardSettings settings = plugin.getSettings();
+        assertNotNull("Settings should be accessible", settings);
         
-        // Both should generate valid outputs
-        Dataset highCh1 = (Dataset) highColoc.getOutput("channel1");
-        Dataset lowCh1 = (Dataset) lowColoc.getOutput("channel1");
-        
-        assertNotNull("High colocalization should generate channel 1", highCh1);
-        assertNotNull("Low colocalization should generate channel 1", lowCh1);
+        // Verify default settings values
+        assertEquals("Default number of spots", 50, settings.numSpots);
+        assertEquals("Default spot radius", 5.0, settings.spotRadius, 0.01);
+        assertEquals("Default overlap fraction", 0.7, settings.overlapFraction, 0.01);
+        assertEquals("Default image width", 256, settings.width);
+        assertEquals("Default image height", 256, settings.height);
+        assertTrue("Noise should be enabled by default", settings.addNoise);
+        assertEquals("Default noise std dev", 10.0, settings.noiseStdDev, 0.01);
     }
     
     @Test
-    public void testInterpretationGuideContent() throws InterruptedException, ExecutionException {
-        Module module = commandService.run(Coloc_Teacher.class, true,
-            "testMode", true).get();
+    public void testMultipleExecutions() {
+        // Test that multiple executions work correctly
+        Coloc_Teacher plugin1 = new Coloc_Teacher(true);
+        context.inject(plugin1);
+        plugin1.run();
         
-        String guide = (String) module.getOutput("interpretationGuide");
+        Coloc_Teacher plugin2 = new Coloc_Teacher(true);
+        context.inject(plugin2);
+        plugin2.run();
+        
+        // Both should generate valid outputs
+        Dataset ch1_1 = plugin1.getChannel1();
+        Dataset ch1_2 = plugin2.getChannel1();
+        
+        assertNotNull("First execution should generate channel 1", ch1_1);
+        assertNotNull("Second execution should generate channel 1", ch1_2);
+        
+        // Outputs should be independent (different objects)
+        assertNotSame("Outputs should be independent", ch1_1, ch1_2);
+    }
+    
+    @Test
+    public void testInterpretationGuideContent() {
+        Coloc_Teacher plugin = new Coloc_Teacher(true);
+        context.inject(plugin);
+        plugin.run();
+        
+        String guide = plugin.getInterpretationGuide();
         assertNotNull("Interpretation guide should not be null", guide);
         
         // Check for key educational content
@@ -127,5 +150,6 @@ public class Coloc_TeacherTest {
         assertTrue("Guide should contain Manders' explanation", guide.contains("Manders'"));
         assertTrue("Guide should contain Kendall's tau explanation", guide.contains("Kendall's tau"));
         assertTrue("Guide should mention colocalization level", guide.contains("colocalization"));
+        assertTrue("Guide should contain synthetic data parameters", guide.contains("SYNTHETIC DATA PARAMETERS"));
     }
 }

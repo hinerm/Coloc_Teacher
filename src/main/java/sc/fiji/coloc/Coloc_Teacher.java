@@ -35,7 +35,6 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
 
 import org.scijava.ItemIO;
-import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
 import org.scijava.convert.ConvertService;
@@ -76,9 +75,8 @@ public class Coloc_Teacher implements Command {
     @Parameter  
     private ModuleService moduleService;
 
-    // Test mode parameter - when true, skips wizard and uses default values
+    // Test mode field - when true, skips wizard and uses default values
     // This is only for automated testing and should never be visible to users
-    @Parameter(required = false, persist = false, visibility = ItemVisibility.INVISIBLE)
     private boolean testMode = false;
 
     // Outputs
@@ -94,8 +92,23 @@ public class Coloc_Teacher implements Command {
     // Internal parameter storage (collected via wizard)
     private WizardSettings settings = new WizardSettings();
     
+    /**
+     * Default constructor for SciJava plugin framework
+     */
+    public Coloc_Teacher() {
+        this.testMode = false;
+    }
+    
+    /**
+     * Constructor for testing with specified test mode
+     * @param testMode if true, skips wizard and uses default values
+     */
+    public Coloc_Teacher(boolean testMode) {
+        this.testMode = testMode;
+    }
+    
     // Inner class to hold all wizard-collected settings
-    private static class WizardSettings {
+    public static class WizardSettings {
         // Synthetic image parameters
         int numSpots = 50;
         double spotRadius = 5.0;
@@ -481,5 +494,39 @@ public class Coloc_Teacher implements Command {
         sb.append("============================================================\n");
 
         interpretationGuide = sb.toString();
+    }
+    
+    // Getter methods for testing
+    
+    /**
+     * Get the generated channel 1 dataset.
+     * @return the synthetic channel 1 dataset, or null if not yet generated
+     */
+    public Dataset getChannel1() {
+        return channel1;
+    }
+    
+    /**
+     * Get the generated channel 2 dataset.
+     * @return the synthetic channel 2 dataset, or null if not yet generated
+     */
+    public Dataset getChannel2() {
+        return channel2;
+    }
+    
+    /**
+     * Get the interpretation guide text.
+     * @return the interpretation guide, or null if not yet generated
+     */
+    public String getInterpretationGuide() {
+        return interpretationGuide;
+    }
+    
+    /**
+     * Get the current wizard settings (for testing purposes).
+     * @return a copy of the current settings
+     */
+    public WizardSettings getSettings() {
+        return settings;
     }
 }
