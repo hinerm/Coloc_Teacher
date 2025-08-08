@@ -26,6 +26,7 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.NumberWidget;
+import org.scijava.widget.TextWidget;
 
 /**
  * Wizard step 1: Configure synthetic image parameters
@@ -37,18 +38,9 @@ public class SyntheticImageWizard extends WizardStep {
     @Parameter(required = false, persist = false, visibility = ItemVisibility.INVISIBLE)
     private boolean testMode = false;
 
-    @Override
-    public int getStepNumber() { return 1; }
-
-    @Override
-    public int getTotalSteps() { return 4; }
-
-    @Override
-    public String getStepTitle() { return "Synthetic Image Setup"; }
-
-    @Override
-    public String getEducationalContent() {
-        return "<html><p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
+    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String educationalContent = "<html><p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
                "This controlled approach lets you:</p>" +
                "<ul>" +
                "<li>Know the ground truth (actual overlap)</li>" +
@@ -61,7 +53,18 @@ public class SyntheticImageWizard extends WizardStep {
                "&nbsp;&nbsp;- 0.5 = Half the spots overlap<br>" +
                "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
                "<p><b>Configure your synthetic images:</b></p></html>";
-    }
+
+    @Parameter(label = " ", style = "separator")
+    private String separator2 = "";
+
+    @Override
+    public int getStepNumber() { return 1; }
+
+    @Override
+    public int getTotalSteps() { return 4; }
+
+    @Override
+    public String getStepTitle() { return "Synthetic Image Setup"; }
 
     @Parameter(label = "Image width (pixels)", min = "64", max = "1024", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "32")

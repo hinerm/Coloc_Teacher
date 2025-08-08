@@ -24,6 +24,8 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.widget.TextWidget;
+import org.scijava.ItemVisibility;
 
 /**
  * Wizard step 3: Choose statistical methods for colocalization analysis
@@ -40,9 +42,9 @@ public class StatisticsWizard extends WizardStep {
     @Override
     public String getStepTitle() { return "Statistical Methods"; }
 
-    @Override
-    public String getEducationalContent() {
-        return "<html><p>Different statistical measures reveal different aspects of colocalization. " +
+    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String educationalContent = "<html><p>Different statistical measures reveal different aspects of colocalization. " +
                "Understanding when to use each method is key to proper analysis.</p>" +
                "<p><b>Correlation-based measures:</b><br>" +
                "• <b>Spearman's rank:</b> Non-parametric correlation, robust to outliers<br>" +
@@ -51,7 +53,9 @@ public class StatisticsWizard extends WizardStep {
                "• <b>Manders' coefficients:</b> Fraction of pixels that overlap<br>" +
                "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
                "<p><b>Choose the methods appropriate for your research:</b></p></html>";
-    }
+
+    @Parameter(label = " ", style = "separator")
+    private String separator2 = "";
 
     @Parameter(label = "Use Li's ICQ (Intensity Correlation Quotient)", 
                description = "Compares intensity correlation to random distribution")

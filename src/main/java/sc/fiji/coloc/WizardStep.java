@@ -24,7 +24,6 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.ui.UIService;
-import org.scijava.widget.TextWidget;
 
 /**
  * Abstract base class for wizard steps in the Coloc Teacher plugin.
@@ -34,10 +33,6 @@ public abstract class WizardStep implements Command {
 
     @Parameter
     private UIService uiService;
-
-    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
-               persist = false, required = false, visibility = org.scijava.ItemVisibility.MESSAGE)
-    protected String educationalContent = "";
 
     @Parameter(label = " ", style = "separator")
     private String separator1 = "";
@@ -85,22 +80,8 @@ public abstract class WizardStep implements Command {
      */
     public abstract String getStepTitle();
 
-    /**
-     * Get the educational content for this step
-     * @return HTML formatted educational content
-     */
-    public abstract String getEducationalContent();
-
-    /**
-     * Initialize the wizard step - sets up educational content
-     */
-    protected void initializeStep() {
-        educationalContent = getEducationalContent();
-    }
-
     @Override
     public void run() {
-        initializeStep();
         // Subclasses can override this for additional functionality
     }
 }

@@ -24,6 +24,8 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.widget.TextWidget;
+import org.scijava.ItemVisibility;
 
 /**
  * Wizard step 4: Configure display and visualization options
@@ -40,9 +42,9 @@ public class DisplayWizard extends WizardStep {
     @Override
     public String getStepTitle() { return "Display Options"; }
 
-    @Override
-    public String getEducationalContent() {
-        return "<html><p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
+    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String educationalContent = "<html><p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
                "<p><b>Display options:</b><br>" +
                "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
                "• <b>Generate scatterplot:</b> 2D histogram of pixel intensities</p>" +
@@ -53,7 +55,9 @@ public class DisplayWizard extends WizardStep {
                "<p>For teaching purposes, it's recommended to show all visualizations " +
                "to better understand how the algorithms work.</p>" +
                "<p><b>Choose your display preferences:</b></p></html>";
-    }
+
+    @Parameter(label = " ", style = "separator")
+    private String separator2 = "";
 
     @Parameter(label = "Display intermediate images", 
                description = "Show threshold images and processing steps")

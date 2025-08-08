@@ -25,6 +25,8 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.NumberWidget;
+import org.scijava.widget.TextWidget;
+import org.scijava.ItemVisibility;
 
 /**
  * Wizard step 2: Configure Costes significance test parameters
@@ -41,9 +43,9 @@ public class CostesWizard extends WizardStep {
     @Override
     public String getStepTitle() { return "Costes Significance Test"; }
 
-    @Override
-    public String getEducationalContent() {
-        return "<html><p>The Costes significance test determines if colocalization is statistically significant " +
+    @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
+               persist = false, required = false, visibility = ItemVisibility.MESSAGE)
+    private String educationalContent = "<html><p>The Costes significance test determines if colocalization is statistically significant " +
                "by comparing your data to randomized versions.</p>" +
                "<p><b>How it works:</b><br>" +
                "1. Scrambles one channel while keeping the other intact<br>" +
@@ -55,7 +57,9 @@ public class CostesWizard extends WizardStep {
                "• <b>PSF:</b> Point Spread Function width (affects scrambling)<br>" +
                "• <b>Display shuffled:</b> Show examples of randomized data</p>" +
                "<p><b>Configure significance testing:</b></p></html>";
-    }
+
+    @Parameter(label = " ", style = "separator")
+    private String separator2 = "";
 
     @Parameter(label = "Perform Costes significance test", 
                description = "Statistical test for significance of colocalization")
