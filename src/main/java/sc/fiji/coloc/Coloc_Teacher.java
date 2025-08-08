@@ -36,6 +36,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import org.scijava.ItemIO;
 import org.scijava.command.Command;
+import org.scijava.command.CommandModule;
 import org.scijava.command.CommandService;
 import org.scijava.convert.ConvertService;
 import org.scijava.log.LogService;
@@ -92,21 +93,6 @@ public class Coloc_Teacher implements Command {
     // Internal parameter storage (collected via wizard)
     private WizardSettings settings = new WizardSettings();
     
-    /**
-     * Default constructor for SciJava plugin framework
-     */
-    public Coloc_Teacher() {
-        this.testMode = false;
-    }
-    
-    /**
-     * Constructor for testing with specified test mode
-     * @param testMode if true, skips wizard and uses default values
-     */
-    public Coloc_Teacher(boolean testMode) {
-        this.testMode = testMode;
-    }
-    
     // Inner class to hold all wizard-collected settings
     public static class WizardSettings {
         // Synthetic image parameters
@@ -136,6 +122,21 @@ public class Coloc_Teacher implements Command {
         boolean displayImages = false;
         boolean displayShuffledCostes = false;
     }
+    
+    /**
+     * Default constructor for SciJava plugin framework
+     */
+    public Coloc_Teacher() {
+        this.testMode = false;
+    }
+    
+    /**
+     * Constructor for testing with specified test mode
+     * @param testMode if true, skips wizard and uses default values
+     */
+    public Coloc_Teacher(boolean testMode) {
+        this.testMode = testMode;
+    }
 
     @Override
     public void run() {
@@ -160,16 +161,23 @@ public class Coloc_Teacher implements Command {
     private void runWizard() throws Exception {
         // Step 1: Synthetic Image Setup
         log.info("Step 1: Configuring synthetic image parameters...");
-        SyntheticImageWizard step1 = new SyntheticImageWizard();
         
+        CommandModule step1Module;
         try {
-            commandService.run(SyntheticImageWizard.class, true).get();
+            step1Module = commandService.run(SyntheticImageWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 1");
             return;
         }
         
+        // Check if cancelled
+        if (step1Module == null || step1Module.isCanceled()) {
+            log.info("Wizard cancelled by user at step 1");
+            return;
+        }
+        
         // Get the parameters from the completed wizard step
+        SyntheticImageWizard step1 = (SyntheticImageWizard) step1Module.getCommand();
         settings.width = step1.width;
         settings.height = step1.height;
         settings.numSpots = step1.numSpots;
@@ -180,15 +188,22 @@ public class Coloc_Teacher implements Command {
         
         // Step 2: Costes Test Setup
         log.info("Step 2: Configuring Costes significance test...");
-        CostesWizard step2 = new CostesWizard();
         
+        CommandModule step2Module;
         try {
-            commandService.run(CostesWizard.class, true).get();
+            step2Module = commandService.run(CostesWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 2");
             return;
         }
         
+        // Check if cancelled
+        if (step2Module == null || step2Module.isCanceled()) {
+            log.info("Wizard cancelled by user at step 2");
+            return;
+        }
+        
+        CostesWizard step2 = (CostesWizard) step2Module.getCommand();
         settings.useCostes = step2.useCostes;
         settings.nrCostesRandomisations = step2.nrCostesRandomisations;
         settings.psf = step2.psf;
@@ -196,15 +211,22 @@ public class Coloc_Teacher implements Command {
         
         // Step 3: Statistical Methods
         log.info("Step 3: Selecting statistical methods...");
-        StatisticsWizard step3 = new StatisticsWizard();
         
+        CommandModule step3Module;
         try {
-            commandService.run(StatisticsWizard.class, true).get();
+            step3Module = commandService.run(StatisticsWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 3");
             return;
         }
         
+        // Check if cancelled
+        if (step3Module == null || step3Module.isCanceled()) {
+            log.info("Wizard cancelled by user at step 3");
+            return;
+        }
+        
+        StatisticsWizard step3 = (StatisticsWizard) step3Module.getCommand();
         settings.useLiICQ = step3.useLiICQ;
         settings.useSpearmanRank = step3.useSpearmanRank;
         settings.useManders = step3.useManders;
@@ -212,15 +234,22 @@ public class Coloc_Teacher implements Command {
         
         // Step 4: Display Options
         log.info("Step 4: Configuring display options...");
-        DisplayWizard step4 = new DisplayWizard();
         
+        CommandModule step4Module;
         try {
-            commandService.run(DisplayWizard.class, true).get();
+            step4Module = commandService.run(DisplayWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 4");
             return;
         }
         
+        // Check if cancelled
+        if (step4Module == null || step4Module.isCanceled()) {
+            log.info("Wizard cancelled by user at step 4");
+            return;
+        }
+        
+        DisplayWizard step4 = (DisplayWizard) step4Module.getCommand();
         settings.displayImages = step4.displayImages;
         settings.useScatterplot = step4.useScatterplot;
         
