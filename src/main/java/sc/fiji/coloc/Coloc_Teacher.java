@@ -21,6 +21,8 @@
  */
 package sc.fiji.coloc;
 
+import ij.ImagePlus;
+
 import java.util.Random;
 
 import net.imagej.Dataset;
@@ -34,6 +36,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import org.scijava.ItemIO;
 import org.scijava.command.Command;
+import org.scijava.convert.ConvertService;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -54,6 +57,9 @@ public class Coloc_Teacher implements Command {
     // Services
     @Parameter
     private LogService log;
+
+    @Parameter
+    private ConvertService convertService;
 
     @Parameter
     private DatasetService datasetService;
@@ -250,10 +256,49 @@ public class Coloc_Teacher implements Command {
         log.info("Running colocalization analysis...");
         
         try {
-            // Convert datasets to ImagePlus for Coloc_2 compatibility
-            // Note: This is a bridge between ImageJ2 and the existing Coloc_2 plugin
-            // In a pure ImageJ2 implementation, we would rewrite the colocalization algorithms
+            // Convert ImageJ2 Datasets to ImageJ1 ImagePlus objects for Coloc_2
+            ImagePlus imp1 = convertService.convert(channel1, ImagePlus.class);
+            ImagePlus imp2 = convertService.convert(channel2, ImagePlus.class);
             
+            if (imp1 == null || imp2 == null) {
+                log.error("Failed to convert Dataset to ImagePlus for colocalization analysis");
+                return;
+            }
+            
+            // Set appropriate titles for display
+            imp1.setTitle("Synthetic Channel 1");
+            imp2.setTitle("Synthetic Channel 2");
+            
+            // Create and initialize Coloc_2 instance using the proper API
+            Coloc_2<net.imglib2.type.numeric.real.FloatType> coloc2 = new Coloc_2<>();
+            
+            // Initialize settings using the proper API from Coloc_2
+            boolean success = coloc2.initializeSettings(
+                imp1,                          // img1
+                imp2,                          // img2
+                0,                             // indexMask (no mask)
+                0,                             // indexRegr (regression method)
+                false,                         // autoSavePdf
+                displayImages,                 // displayImages
+                displayShuffledCostes,         // displayShuffledCostes
+                useLiICQ,                      // useLiCh1
+                useLiICQ,                      // useLiCh2
+                useLiICQ,                      // useLiICQ
+                useSpearmanRank,               // useSpearmanRank
+                useManders,                    // useManders
+                useKendallTau,                 // useKendallTau
+                useScatterplot,                // useScatterplot
+                useCostes,                     // useCostes
+                psf,                           // psf
+                nrCostesRandomisations         // nrCostesRandomisations
+            );
+            
+            if (!success) {
+                log.error("Failed to initialize Coloc_2 settings");
+                return;
+            }
+            
+            // Log the colocalization analysis parameters
             log.info("Colocalization analysis parameters:");
             log.info("  Costes randomizations: " + nrCostesRandomisations);
             log.info("  PSF: " + psf);
@@ -264,15 +309,20 @@ public class Coloc_Teacher implements Command {
             log.info("  Use scatterplot: " + useScatterplot);
             log.info("  Use Costes test: " + useCostes);
             
-            // TODO: Implement pure ImageJ2 colocalization analysis
-            // For now, we log the parameters that would be used
-            
-            log.info("Note: For full colocalization analysis, you can:");
-            log.info("1. Use the generated images with Fiji's Coloc_2 plugin");
-            log.info("2. Or implement pure ImageJ2 colocalization algorithms");
+            try {
+                Coloc_2<FloatType>.MaskInfo maskInfo = coloc2.masks.get(0);
+                coloc2.colocalise(coloc2.img1, coloc2.img2, maskInfo.roi, maskInfo.mask);
+                log.info("Colocalization analysis completed successfully");
+            } catch (sc.fiji.coloc.algorithms.MissingPreconditionException e) {
+                log.error("Colocalization analysis failed due to missing precondition: " + e.getMessage());
+            }
             
         } catch (Exception e) {
             log.error("Error during colocalization analysis", e);
+            // Provide fallback message
+            log.info("Note: For full colocalization analysis, you can:");
+            log.info("1. Use the generated images with Fiji's Coloc_2 plugin");
+            log.info("2. Or implement pure ImageJ2 colocalization algorithms");
         }
     }
 
