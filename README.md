@@ -14,6 +14,7 @@ The development progressed through several phases:
 5. **Documentation**: Thorough documentation and conversation archival
 
 A full record of the conversation can be found in [ColocTeacherChat.md](doc/chats/ColocTeacherChat.md)
+
 A CSS-powered pretty record of the conversation can be found in [ColocTeacherChat-pretty.md](doc/chats/ColocTeacherChat-pretty.md)
 
 ### Adding future chats
