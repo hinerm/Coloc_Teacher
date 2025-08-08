@@ -1,70 +1,86 @@
 #!/usr/bin/env python3
 """
-Convert chat text file to styled markdown with chat bubbles
+Convert chat text file to pretty CSS-styled markdown
 """
 import re
 import html
 import sys
 from pathlib import Path
 
-def convert_chat_to_markdown(input_file, output_file):
-    """Convert chat text to styled markdown"""
+def convert_chat_to_pretty_markdown(input_file, output_file):
+    """Convert chat text to CSS-styled markdown that renders well in browsers"""
     
     # Read input file
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # CSS and header
+    # CSS-styled markdown header
     markdown_header = '''# 💬 Coloc Teacher Development Chat
-*A conversation between hinerm and GitHub Copilot about building an educational colocalization analysis plugin*
-
----
 
 <style>
+body {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8fafc;
+    line-height: 1.6;
+}
+
+.chat-container {
+    margin: 20px 0;
+}
+
 .user-message {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 12px 16px;
-    border-radius: 18px 18px 4px 18px;
-    margin: 8px 0 8px 60px;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    padding: 15px 20px;
+    border-radius: 20px 20px 5px 20px;
+    margin: 15px 0 15px 80px;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
     position: relative;
-    max-width: 80%;
+    max-width: 75%;
     margin-left: auto;
     margin-right: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    word-wrap: break-word;
 }
 
 .user-message::before {
     content: "🧑‍💻 hinerm";
     position: absolute;
-    top: -18px;
-    right: 0;
+    top: -20px;
+    right: 10px;
     font-size: 12px;
     font-weight: 600;
     color: #667eea;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
 }
 
 .assistant-message {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     color: white;
-    padding: 12px 16px;
-    border-radius: 18px 18px 18px 4px;
-    margin: 8px 60px 8px 0;
-    box-shadow: 0 2px 8px rgba(240, 147, 251, 0.3);
+    padding: 15px 20px;
+    border-radius: 20px 20px 20px 5px;
+    margin: 15px 80px 15px 0;
+    box-shadow: 0 3px 10px rgba(240, 147, 251, 0.3);
     position: relative;
-    max-width: 80%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 75%;
+    word-wrap: break-word;
 }
 
 .assistant-message::before {
     content: "🤖 GitHub Copilot";
     position: absolute;
-    top: -18px;
-    left: 0;
+    top: -20px;
+    left: 10px;
     font-size: 12px;
     font-weight: 600;
     color: #f093fb;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
 }
 
 .code-block {
@@ -76,23 +92,36 @@ def convert_chat_to_markdown(input_file, output_file):
     font-family: 'Fira Code', 'Consolas', monospace;
     overflow-x: auto;
     border-left: 4px solid #4299e1;
+    white-space: pre-wrap;
 }
 
 .timestamp {
     text-align: center;
     color: #718096;
     font-size: 12px;
-    margin: 20px 0;
+    margin: 30px 0;
     font-style: italic;
 }
 
-.section-divider {
-    border: 0;
-    height: 2px;
-    background: linear-gradient(to right, transparent, #e2e8f0, transparent);
-    margin: 30px 0;
+.section-break {
+    height: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #718096;
+    font-style: italic;
+    margin-bottom: 40px;
 }
 </style>
+
+<div class="subtitle">A conversation between hinerm and GitHub Copilot about building an educational colocalization analysis plugin</div>
 
 <div class="timestamp">🕒 Session started - Exploring Fiji's colocalization tools</div>
 
@@ -117,7 +146,13 @@ def convert_chat_to_markdown(input_file, output_file):
             if '```' in content_text:
                 content_text = format_code_blocks(content_text)
             
-            markdown_content.append(f'\n<div class="user-message">\n{content_text}\n</div>\n')
+            markdown_content.append(f'''
+<div class="chat-container">
+<div class="user-message">
+{content_text}
+</div>
+</div>
+''')
             
         elif message.startswith('GitHub Copilot:'):
             content_text = message[15:].strip()
@@ -128,7 +163,13 @@ def convert_chat_to_markdown(input_file, output_file):
             if '```' in content_text:
                 content_text = format_code_blocks(content_text)
                 
-            markdown_content.append(f'\n<div class="assistant-message">\n{content_text}\n</div>\n')
+            markdown_content.append(f'''
+<div class="chat-container">
+<div class="assistant-message">
+{content_text}
+</div>
+</div>
+''')
     
     # Write output
     final_markdown = ''.join(markdown_content)
@@ -139,8 +180,8 @@ def convert_chat_to_markdown(input_file, output_file):
 
 def format_code_blocks(text):
     """Format code blocks with proper styling"""
-    # Simple code block handling - you can enhance this
-    text = re.sub(r'```([^`]+)```', r'<div class="code-block">\1</div>', text, flags=re.DOTALL)
+    # Handle code blocks more carefully
+    text = re.sub(r'```([^`]*?)```', r'</div><div class="code-block">\1</div><div class="user-message" style="background: none; box-shadow: none; padding: 0;">', text, flags=re.DOTALL)
     return text
 
 def main():
@@ -149,20 +190,21 @@ def main():
     if len(sys.argv) > 2:
         output_file = sys.argv[2]
     else:
-        # Auto-generate output filename: input.txt -> input.md
+        # Auto-generate output filename: input.txt -> input-pretty.md
         input_path = Path(input_file)
-        output_file = input_path.with_suffix('.md').name
+        output_file = input_path.stem + "-pretty.md"
     
     if not Path(input_file).exists():
         print(f"❌ Error: Input file '{input_file}' not found!")
         return 1
     
     try:
-        message_count = convert_chat_to_markdown(input_file, output_file)
-        print(f"✅ Conversion complete!")
+        message_count = convert_chat_to_pretty_markdown(input_file, output_file)
+        print(f"✅ Pretty CSS-styled markdown conversion complete!")
         print(f"📄 Original file: {input_file}")
-        print(f"🎨 Styled markdown: {output_file}")
+        print(f"🎨 Pretty markdown: {output_file}")
         print(f"💬 Messages processed: {message_count}")
+        print(f"🌐 Drag into browser or save as .html for full styling!")
         return 0
     except Exception as e:
         print(f"❌ Error during conversion: {e}")
