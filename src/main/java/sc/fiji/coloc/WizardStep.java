@@ -33,12 +33,19 @@ import org.scijava.widget.TextWidget;
  */
 public abstract class WizardStep implements Command {
 
+    /**
+     * HACK: Workaround because when we try to set this programmatically
+     * through the CommandService, it is "satisfied" and doesn't appear in the
+     * wizard dialog.
+     */
+    public static String PROGRESS_MESSAGE;
+
     @Parameter
     private UIService uiService;
     
     @Parameter(label = "Wizard Progress", style = TextWidget.AREA_STYLE, 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
-    protected String wizardProgress = "";
+    private String wizardProgress = PROGRESS_MESSAGE;
 
     // Cancellation flag - will be set by dialog result
     private boolean cancelled = false;

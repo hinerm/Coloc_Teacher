@@ -29,7 +29,7 @@ import org.scijava.widget.NumberWidget;
 import org.scijava.widget.TextWidget;
 
 /**
- * Wizard step 1: Configure synthetic image parameters
+ * Wizard step: Configure synthetic image parameters
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Synthetic Image Setup")
 public class SyntheticImageWizard extends WizardStep {

@@ -161,14 +161,14 @@ public class Coloc_Teacher implements Command {
         // Define wizard structure
         final int totalSteps = 4;
         int currentStep = 1;
-        
+
         // Synthetic Image Setup
         log.info("Step " + currentStep + ": Configuring synthetic image parameters...");
-        
+
         CommandModule syntheticModule;
         try {
-            syntheticModule = commandService.run(SyntheticImageWizard.class, true,
-                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
+            WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+            syntheticModule = commandService.run(SyntheticImageWizard.class, true).get();
         } catch (Exception e) {
             log.info(createCancellationText(currentStep));
             return;
@@ -196,8 +196,8 @@ public class Coloc_Teacher implements Command {
 
         CommandModule costesModule;
         try {
-            costesModule = commandService.run(CostesWizard.class, true, 
-                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
+            WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+            costesModule = commandService.run(CostesWizard.class, true).get();
         } catch (Exception e) {
             log.info(createCancellationText(currentStep));
             return;
@@ -221,8 +221,8 @@ public class Coloc_Teacher implements Command {
 
         CommandModule statsModule;
         try {
-            statsModule = commandService.run(StatisticsWizard.class, true,
-                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
+            WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+            statsModule = commandService.run(StatisticsWizard.class, true).get();
         } catch (Exception e) {
             log.info(createCancellationText(currentStep));
             return;
@@ -245,8 +245,8 @@ public class Coloc_Teacher implements Command {
 
         CommandModule displayModule;
         try {
-            displayModule = commandService.run(DisplayWizard.class, true,
-                "wizardProgress", createProgressText(currentStep, totalSteps)).get();
+            WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+            displayModule = commandService.run(DisplayWizard.class, true).get();
         } catch (Exception e) {
             log.info(createCancellationText(currentStep));
             return;

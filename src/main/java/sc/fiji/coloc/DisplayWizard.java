@@ -28,7 +28,7 @@ import org.scijava.widget.TextWidget;
 import org.scijava.ItemVisibility;
 
 /**
- * Wizard step 4: Configure display and visualization options
+ * Wizard step: Configure display and visualization options
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Display Options")
 public class DisplayWizard extends WizardStep {

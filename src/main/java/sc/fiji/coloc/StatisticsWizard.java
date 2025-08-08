@@ -28,7 +28,7 @@ import org.scijava.widget.TextWidget;
 import org.scijava.ItemVisibility;
 
 /**
- * Wizard step 3: Choose statistical methods for colocalization analysis
+ * Wizard step: Choose statistical methods for colocalization analysis
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Statistical Methods")
 public class StatisticsWizard extends WizardStep {

@@ -29,7 +29,7 @@ import org.scijava.widget.TextWidget;
 import org.scijava.ItemVisibility;
 
 /**
- * Wizard step 2: Configure Costes significance test parameters
+ * Wizard step: Configure Costes significance test parameters
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Costes Significance Test")
 public class CostesWizard extends WizardStep {
