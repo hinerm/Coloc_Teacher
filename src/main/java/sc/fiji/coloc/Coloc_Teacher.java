@@ -150,7 +150,7 @@ public class Coloc_Teacher implements Command {
         SyntheticImageWizard step1 = new SyntheticImageWizard();
         
         try {
-            commandService.run(SyntheticImageWizard.class, true, "testMode", false).get();
+            commandService.run(SyntheticImageWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 1");
             return;
@@ -170,7 +170,7 @@ public class Coloc_Teacher implements Command {
         CostesWizard step2 = new CostesWizard();
         
         try {
-            commandService.run(CostesWizard.class, true, "testMode", false).get();
+            commandService.run(CostesWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 2");
             return;
@@ -186,7 +186,7 @@ public class Coloc_Teacher implements Command {
         StatisticsWizard step3 = new StatisticsWizard();
         
         try {
-            commandService.run(StatisticsWizard.class, true, "testMode", false).get();
+            commandService.run(StatisticsWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 3");
             return;
@@ -202,7 +202,7 @@ public class Coloc_Teacher implements Command {
         DisplayWizard step4 = new DisplayWizard();
         
         try {
-            commandService.run(DisplayWizard.class, true, "testMode", false).get();
+            commandService.run(DisplayWizard.class, true).get();
         } catch (Exception e) {
             log.info("Wizard cancelled by user at step 4");
             return;

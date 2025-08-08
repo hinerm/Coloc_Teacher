@@ -34,10 +34,6 @@ import org.scijava.widget.TextWidget;
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 1 of 4 - Synthetic Image Setup")
 public class SyntheticImageWizard extends WizardStep {
 
-    // Test mode parameter - when true, skips dialog and uses default values
-    @Parameter(required = false, persist = false, visibility = ItemVisibility.INVISIBLE)
-    private boolean testMode = false;
-
     @Parameter(label = "Educational Information", style = TextWidget.AREA_STYLE, 
                persist = false, required = false, visibility = ItemVisibility.MESSAGE)
     private String educationalContent = "<html><p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
