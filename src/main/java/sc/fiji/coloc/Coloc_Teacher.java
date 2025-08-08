@@ -1,4 +1,4 @@
-/*-
+﻿/*-
  * #%L
  * Educational Fiji plugin for teaching colocalization analysis.
  * %%
@@ -35,7 +35,9 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
 
 import org.scijava.ItemIO;
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
+import org.scijava.command.CommandService;
 import org.scijava.convert.ConvertService;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
@@ -45,12 +47,12 @@ import org.scijava.ui.UIService;
 /**
  * Educational Fiji plugin for teaching colocalization analysis with synthetic data generation.
  * 
- * This plugin generates synthetic colocalization test images and provides educational 
- * guidance on interpreting colocalization analysis results.
+ * This plugin uses a multi-step wizard interface to guide users through parameter selection
+ * while providing educational context at each step.
  *
  * @author Mark Hiner
  */
-@Plugin(type = Command.class, headless = true, 
+@Plugin(type = Command.class, headless = false, 
     menuPath = "Plugins>Colocalization>Coloc Teacher")
 public class Coloc_Teacher implements Command {
 
@@ -67,58 +69,13 @@ public class Coloc_Teacher implements Command {
     @Parameter
     private UIService uiService;
 
-    // Parameters for synthetic image generation
-    @Parameter(label = "Number of spots", min = "10", max = "500")
-    private int numSpots = 100;
+    @Parameter
+    private CommandService commandService;
 
-    @Parameter(label = "Spot radius (pixels)", min = "2", max = "50")
-    private int spotRadius = 12;
-
-    @Parameter(label = "Overlap fraction", min = "0.0", max = "1.0", stepSize = "0.1")
-    private double overlapFraction = 0.7;
-
-    @Parameter(label = "Base intensity", min = "0", max = "100")
-    private int baseIntensity = 30;
-
-    @Parameter(label = "Max intensity", min = "100", max = "1000")
-    private int maxIntensity = 200;
-
-    @Parameter(label = "Image width", min = "64", max = "1024")
-    private int width = 256;
-
-    @Parameter(label = "Image height", min = "64", max = "1024")
-    private int height = 256;
-
-    // Coloc_2 parameters
-    @Parameter(label = "Costes randomizations", min = "1", max = "100")
-    private int nrCostesRandomisations = 10;
-
-    @Parameter(label = "PSF (for Costes test)", min = "1", max = "10")
-    private int psf = 4;
-
-    @Parameter(label = "Use Manders' coefficients")
-    private boolean useManders = true;
-
-    @Parameter(label = "Use Li's ICQ")
-    private boolean useLiICQ = true;
-
-    @Parameter(label = "Use Spearman rank correlation")
-    private boolean useSpearmanRank = true;
-
-    @Parameter(label = "Use Kendall's tau")
-    private boolean useKendallTau = false;
-
-    @Parameter(label = "Show scatterplot")
-    private boolean useScatterplot = true;
-
-    @Parameter(label = "Use Costes' significance test")
-    private boolean useCostes = true;
-
-    @Parameter(label = "Display result images")
-    private boolean displayImages = false;
-
-    @Parameter(label = "Display shuffled Costes images")
-    private boolean displayShuffledCostes = false;
+    // Test mode parameter - when true, skips wizard and uses default values
+    // This is only for automated testing and should never be visible to users
+    @Parameter(required = false, persist = false, visibility = ItemVisibility.INVISIBLE)
+    private boolean testMode = false;
 
     // Outputs
     @Parameter(type = ItemIO.OUTPUT)
@@ -130,12 +87,112 @@ public class Coloc_Teacher implements Command {
     @Parameter(type = ItemIO.OUTPUT)
     private String interpretationGuide;
 
+    // Internal parameter storage (collected via wizard)
+    private WizardSettings settings = new WizardSettings();
+    
+    // Inner class to hold all wizard-collected settings
+    private static class WizardSettings {
+        // Synthetic image parameters
+        int numSpots = 50;
+        double spotRadius = 5.0;
+        double overlapFraction = 0.7;
+        boolean addNoise = true;
+        double noiseStdDev = 10.0;
+        int baseIntensity = 30;
+        int maxIntensity = 200;
+        int width = 256;
+        int height = 256;
+        
+        // Costes parameters
+        int nrCostesRandomisations = 100;
+        double psf = 3.0;
+        boolean useCostes = true;
+        
+        // Statistical analysis parameters
+        boolean useManders = true;
+        boolean useLiICQ = true;
+        boolean useSpearmanRank = true;
+        boolean useKendallTau = false;
+        
+        // Display options
+        boolean useScatterplot = true;
+        boolean displayImages = false;
+        boolean displayShuffledCostes = false;
+    }
+
     @Override
     public void run() {
+        log.info("Starting Coloc_Teacher" + (testMode ? " in test mode" : " wizard") + "...");
+        
+        try {
+            if (testMode) {
+                // Test mode: use default values without wizard
+                log.info("Test mode: using default parameters");
+                executeAnalysis();
+            } else {
+                // Normal mode: run wizard to collect parameters
+                runWizard();
+            }
+            
+        } catch (Exception e) {
+            log.error("Error during execution", e);
+            uiService.showDialog("Error: " + e.getMessage());
+        }
+    }
+    
+    private void runWizard() throws Exception {
+        // Step 1: Synthetic Image Setup
+        log.info("Step 1: Configuring synthetic image parameters...");
+        SyntheticImageWizard step1 = new SyntheticImageWizard();
+        commandService.run(SyntheticImageWizard.class, true).get();
+        
+        // Get the parameters from the completed wizard step
+        settings.width = step1.width;
+        settings.height = step1.height;
+        settings.numSpots = step1.numSpots;
+        settings.spotRadius = step1.spotRadius;
+        settings.overlapFraction = step1.overlapFraction;
+        settings.addNoise = step1.addNoise;
+        settings.noiseStdDev = step1.noiseStdDev;
+        
+        // Step 2: Costes Test Setup
+        log.info("Step 2: Configuring Costes significance test...");
+        CostesWizard step2 = new CostesWizard();
+        commandService.run(CostesWizard.class, true).get();
+        
+        settings.useCostes = step2.useCostes;
+        settings.nrCostesRandomisations = step2.nrCostesRandomisations;
+        settings.psf = step2.psf;
+        settings.displayShuffledCostes = step2.displayShuffledCostes;
+        
+        // Step 3: Statistical Methods
+        log.info("Step 3: Selecting statistical methods...");
+        StatisticsWizard step3 = new StatisticsWizard();
+        commandService.run(StatisticsWizard.class, true).get();
+        
+        settings.useLiICQ = step3.useLiICQ;
+        settings.useSpearmanRank = step3.useSpearmanRank;
+        settings.useManders = step3.useManders;
+        settings.useKendallTau = step3.useKendallTau;
+        
+        // Step 4: Display Options
+        log.info("Step 4: Configuring display options...");
+        DisplayWizard step4 = new DisplayWizard();
+        commandService.run(DisplayWizard.class, true).get();
+        
+        settings.displayImages = step4.displayImages;
+        settings.useScatterplot = step4.useScatterplot;
+        
+        // Now execute the analysis with collected settings
+        log.info("Wizard complete. Starting analysis with selected parameters...");
+        executeAnalysis();
+    }
+
+    private void executeAnalysis() {
         try {
             log.info("Generating synthetic colocalization test images...");
             
-            // Generate synthetic images
+            // Generate synthetic images using settings
             generateSyntheticImages();
 
             // Run colocalization analysis
@@ -157,13 +214,13 @@ public class Coloc_Teacher implements Command {
     private void generateSyntheticImages() {
         Random rand = new Random();
 
-        log.info("Generating " + numSpots + " synthetic spots with " + 
-                (overlapFraction * 100) + "% overlap");
+        log.info("Generating " + settings.numSpots + " synthetic spots with " + 
+                (settings.overlapFraction * 100) + "% overlap");
 
         // Create datasets
         final String name1 = "Synthetic Channel 1";
         final String name2 = "Synthetic Channel 2";
-        final long[] dims = { width, height };
+        final long[] dims = { settings.width, settings.height };
         final AxisType[] axes = { Axes.X, Axes.Y };
 
         channel1 = datasetService.create(new FloatType(), dims, name1, axes);
@@ -176,40 +233,41 @@ public class Coloc_Teacher implements Command {
         Img<FloatType> img2 = (Img<FloatType>) channel2.getImgPlus();
 
         // Initialize with background intensity
-        addBackground(img1, baseIntensity);
-        addBackground(img2, baseIntensity);
+        addBackground(img1, settings.baseIntensity);
+        addBackground(img2, settings.baseIntensity);
 
         // Generate spots
-        for (int i = 0; i < numSpots; i++) {
+        for (int i = 0; i < settings.numSpots; i++) {
             // Random center for spot 1
-            int x = rand.nextInt(width - 2 * spotRadius) + spotRadius;
-            int y = rand.nextInt(height - 2 * spotRadius) + spotRadius;
+            int spotRadiusInt = (int)Math.ceil(settings.spotRadius);
+            int x = rand.nextInt(settings.width - 2 * spotRadiusInt) + spotRadiusInt;
+            int y = rand.nextInt(settings.height - 2 * spotRadiusInt) + spotRadiusInt;
 
             // Variable intensity for more realistic distribution
-            float intensity1 = baseIntensity + rand.nextInt(maxIntensity - baseIntensity);
+            float intensity1 = settings.baseIntensity + rand.nextInt(settings.maxIntensity - settings.baseIntensity);
 
             // Add Gaussian-like spot to channel 1
-            addGaussianSpot(img1, x, y, intensity1, spotRadius);
+            addGaussianSpot(img1, x, y, intensity1, settings.spotRadius);
 
             // For overlapFraction, add spot to channel 2 at same location, else random offset
             int x2, y2;
-            if (rand.nextDouble() < overlapFraction) {
+            if (rand.nextDouble() < settings.overlapFraction) {
                 x2 = x;
                 y2 = y;
             } else {
-                x2 = rand.nextInt(width - 2 * spotRadius) + spotRadius;
-                y2 = rand.nextInt(height - 2 * spotRadius) + spotRadius;
+                x2 = rand.nextInt(settings.width - 2 * spotRadiusInt) + spotRadiusInt;
+                y2 = rand.nextInt(settings.height - 2 * spotRadiusInt) + spotRadiusInt;
             }
 
-            float intensity2 = baseIntensity + rand.nextInt(maxIntensity - baseIntensity);
+            float intensity2 = settings.baseIntensity + rand.nextInt(settings.maxIntensity - settings.baseIntensity);
 
             // Add Gaussian-like spot to channel 2
-            addGaussianSpot(img2, x2, y2, intensity2, spotRadius);
+            addGaussianSpot(img2, x2, y2, intensity2, settings.spotRadius);
         }
 
         // Clamp intensities
-        clampIntensities(img1, maxIntensity + baseIntensity);
-        clampIntensities(img2, maxIntensity + baseIntensity);
+        clampIntensities(img1, settings.maxIntensity + settings.baseIntensity);
+        clampIntensities(img2, settings.maxIntensity + settings.baseIntensity);
     }
 
     private void addBackground(Img<FloatType> img, float value) {
@@ -220,18 +278,19 @@ public class Coloc_Teacher implements Command {
     }
 
     private void addGaussianSpot(Img<FloatType> img, int centerX, int centerY, 
-                                 float intensity, int radius) {
+                                 float intensity, double radius) {
         RandomAccess<FloatType> ra = img.randomAccess();
         
-        for (int dx = -radius; dx <= radius; dx++) {
-            for (int dy = -radius; dy <= radius; dy++) {
+        int intRadius = (int) Math.ceil(radius);
+        for (int dx = -intRadius; dx <= intRadius; dx++) {
+            for (int dy = -intRadius; dy <= intRadius; dy++) {
                 double dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist <= radius) {
                     double falloff = Math.exp(-dist * dist / (radius * radius / 4.0));
                     int px = centerX + dx;
                     int py = centerY + dy;
                     
-                    if (px >= 0 && px < width && py >= 0 && py < height) {
+                    if (px >= 0 && px < settings.width && py >= 0 && py < settings.height) {
                         ra.setPosition(px, 0);
                         ra.setPosition(py, 1);
                         float currentVal = ra.get().get();
@@ -279,18 +338,18 @@ public class Coloc_Teacher implements Command {
                 0,                             // indexMask (no mask)
                 0,                             // indexRegr (regression method)
                 false,                         // autoSavePdf
-                displayImages,                 // displayImages
-                displayShuffledCostes,         // displayShuffledCostes
-                useLiICQ,                      // useLiCh1
-                useLiICQ,                      // useLiCh2
-                useLiICQ,                      // useLiICQ
-                useSpearmanRank,               // useSpearmanRank
-                useManders,                    // useManders
-                useKendallTau,                 // useKendallTau
-                useScatterplot,                // useScatterplot
-                useCostes,                     // useCostes
-                psf,                           // psf
-                nrCostesRandomisations         // nrCostesRandomisations
+                settings.displayImages,        // displayImages
+                settings.displayShuffledCostes, // displayShuffledCostes
+                settings.useLiICQ,             // useLiCh1
+                settings.useLiICQ,             // useLiCh2
+                settings.useLiICQ,             // useLiICQ
+                settings.useSpearmanRank,      // useSpearmanRank
+                settings.useManders,           // useManders
+                settings.useKendallTau,        // useKendallTau
+                settings.useScatterplot,       // useScatterplot
+                settings.useCostes,            // useCostes
+                (int)settings.psf,             // psf - cast to int
+                settings.nrCostesRandomisations // nrCostesRandomisations
             );
             
             if (!success) {
@@ -300,14 +359,14 @@ public class Coloc_Teacher implements Command {
             
             // Log the colocalization analysis parameters
             log.info("Colocalization analysis parameters:");
-            log.info("  Costes randomizations: " + nrCostesRandomisations);
-            log.info("  PSF: " + psf);
-            log.info("  Use Manders: " + useManders);
-            log.info("  Use Li ICQ: " + useLiICQ);
-            log.info("  Use Spearman: " + useSpearmanRank);
-            log.info("  Use Kendall tau: " + useKendallTau);
-            log.info("  Use scatterplot: " + useScatterplot);
-            log.info("  Use Costes test: " + useCostes);
+            log.info("  Costes randomizations: " + settings.nrCostesRandomisations);
+            log.info("  PSF: " + settings.psf);
+            log.info("  Use Manders: " + settings.useManders);
+            log.info("  Use Li ICQ: " + settings.useLiICQ);
+            log.info("  Use Spearman: " + settings.useSpearmanRank);
+            log.info("  Use Kendall tau: " + settings.useKendallTau);
+            log.info("  Use scatterplot: " + settings.useScatterplot);
+            log.info("  Use Costes test: " + settings.useCostes);
             
             try {
                 Coloc_2<FloatType>.MaskInfo maskInfo = coloc2.masks.get(0);
@@ -367,12 +426,12 @@ public class Coloc_Teacher implements Command {
         sb.append("============================================================\n");
         sb.append("\n");
         sb.append("SYNTHETIC DATA PARAMETERS USED:\n");
-        sb.append("• Number of spots: " + numSpots + "\n");
-        sb.append("• Spot radius: " + spotRadius + " pixels\n");
-        sb.append("• Overlap fraction: " + (overlapFraction * 100) + "%\n");
+        sb.append("• Number of spots: " + settings.numSpots + "\n");
+        sb.append("• Spot radius: " + settings.spotRadius + " pixels\n");
+        sb.append("• Overlap fraction: " + (settings.overlapFraction * 100) + "%\n");
         sb.append("• Expected colocalization: " + 
-                 (overlapFraction > 0.7 ? "High" : 
-                  overlapFraction > 0.3 ? "Moderate" : "Low") + "\n");
+                 (settings.overlapFraction > 0.7 ? "High" : 
+                  settings.overlapFraction > 0.3 ? "Moderate" : "Low") + "\n");
         sb.append("============================================================\n");
 
         interpretationGuide = sb.toString();
