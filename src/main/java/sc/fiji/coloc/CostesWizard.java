@@ -25,15 +25,25 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.NumberWidget;
-import org.scijava.widget.TextWidget;
 
 /**
  * Wizard step 2: Configure Costes significance test parameters
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 2 of 4 - Costes Significance Test")
-public class CostesWizard implements Command {
+public class CostesWizard extends WizardStep {
 
-    @Parameter(label = "<html><h3>STEP 2 OF 4: COSTES SIGNIFICANCE TEST</h3>" +
+    @Override
+    public int getStepNumber() { return 2; }
+
+    @Override
+    public int getTotalSteps() { return 4; }
+
+    @Override
+    public String getStepTitle() { return "Costes Significance Test"; }
+
+    @Override
+    public String getEducationalContent() {
+        return "<html><h3>STEP 2 OF 4: COSTES SIGNIFICANCE TEST</h3>" +
                "<p>The Costes test determines if the colocalization you observe is statistically significant " +
                "or could have occurred by chance.</p>" +
                "<p><b>How it works:</b><br>" +
@@ -44,9 +54,8 @@ public class CostesWizard implements Command {
                "<p><b>Interpretation:</b><br>" +
                "• P < 0.05: Colocalization is statistically significant<br>" +
                "• P > 0.05: Colocalization might be due to chance</p>" +
-               "<p><b>Choose your parameters:</b></p></html>", 
-               style = TextWidget.AREA_STYLE)
-    private String info = "";
+               "<p><b>Choose your parameters:</b></p></html>";
+    }
 
     @Parameter(label = "Perform Costes significance test", 
                description = "Statistical test for significance of colocalization")
@@ -65,10 +74,4 @@ public class CostesWizard implements Command {
     @Parameter(label = "Display shuffled images", 
                description = "Show examples of the randomized images used in test")
     public boolean displayShuffledCostes = false;
-
-    @Override
-    public void run() {
-        // Nothing to do here - parameters are collected by the framework
-        // The main plugin will retrieve these values and continue to next step
-    }
 }

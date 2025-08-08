@@ -24,15 +24,25 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.widget.TextWidget;
 
 /**
  * Wizard step 4: Configure display and visualization options
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 4 of 4 - Display Options")
-public class DisplayWizard implements Command {
+public class DisplayWizard extends WizardStep {
 
-    @Parameter(label = "<html><h3>STEP 4 OF 4: DISPLAY AND VISUALIZATION OPTIONS</h3>" +
+    @Override
+    public int getStepNumber() { return 4; }
+
+    @Override
+    public int getTotalSteps() { return 4; }
+
+    @Override
+    public String getStepTitle() { return "Display Options"; }
+
+    @Override
+    public String getEducationalContent() {
+        return "<html><h3>STEP 4 OF 4: DISPLAY AND VISUALIZATION OPTIONS</h3>" +
                "<p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
                "<p><b>Display options:</b><br>" +
                "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
@@ -43,9 +53,8 @@ public class DisplayWizard implements Command {
                "• Tight clusters = good correlation in that intensity range</p>" +
                "<p>For teaching purposes, it's recommended to show all visualizations " +
                "to better understand how the algorithms work.</p>" +
-               "<p><b>Choose your display preferences:</b></p></html>", 
-               style = TextWidget.AREA_STYLE)
-    private String info = "";
+               "<p><b>Choose your display preferences:</b></p></html>";
+    }
 
     @Parameter(label = "Display intermediate images", 
                description = "Show threshold images and processing steps")
@@ -54,10 +63,4 @@ public class DisplayWizard implements Command {
     @Parameter(label = "Generate scatterplot", 
                description = "2D histogram showing pixel intensity correlation")
     public boolean useScatterplot = true;
-
-    @Override
-    public void run() {
-        // Nothing to do here - parameters are collected by the framework
-        // The main plugin will retrieve these values and complete the analysis
-    }
 }

@@ -25,15 +25,25 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.widget.NumberWidget;
-import org.scijava.widget.TextWidget;
 
 /**
  * Wizard step 1: Configure synthetic image parameters
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 1 of 4 - Synthetic Image Setup")
-public class SyntheticImageWizard implements Command {
+public class SyntheticImageWizard extends WizardStep {
 
-    @Parameter(label = "<html><h3>STEP 1 OF 4: SYNTHETIC IMAGE GENERATION</h3>" +
+    @Override
+    public int getStepNumber() { return 1; }
+
+    @Override
+    public int getTotalSteps() { return 4; }
+
+    @Override
+    public String getStepTitle() { return "Synthetic Image Setup"; }
+
+    @Override
+    public String getEducationalContent() {
+        return "<html><h3>STEP 1 OF 4: SYNTHETIC IMAGE GENERATION</h3>" +
                "<p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
                "This controlled approach lets you:</p>" +
                "<ul>" +
@@ -46,9 +56,8 @@ public class SyntheticImageWizard implements Command {
                "&nbsp;&nbsp;- 0.0 = No overlap (perfect segregation)<br>" +
                "&nbsp;&nbsp;- 0.5 = Half the spots overlap<br>" +
                "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
-               "<p><b>Configure your synthetic images:</b></p></html>", 
-               style = TextWidget.AREA_STYLE)
-    private String info = "";
+               "<p><b>Configure your synthetic images:</b></p></html>";
+    }
 
     @Parameter(label = "Image width (pixels)", min = "64", max = "1024", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "32")
@@ -76,10 +85,4 @@ public class SyntheticImageWizard implements Command {
     @Parameter(label = "Noise standard deviation", min = "0.0", max = "50.0", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "1.0")
     public double noiseStdDev = 10.0;
-
-    @Override
-    public void run() {
-        // Nothing to do here - parameters are collected by the framework
-        // The main plugin will retrieve these values and continue to next step
-    }
 }

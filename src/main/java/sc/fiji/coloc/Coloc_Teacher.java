@@ -146,6 +146,11 @@ public class Coloc_Teacher implements Command {
         SyntheticImageWizard step1 = new SyntheticImageWizard();
         commandService.run(SyntheticImageWizard.class, true).get();
         
+        if (step1.isCancelled()) {
+            log.info("Wizard cancelled by user at step 1");
+            return;
+        }
+        
         // Get the parameters from the completed wizard step
         settings.width = step1.width;
         settings.height = step1.height;
@@ -160,6 +165,11 @@ public class Coloc_Teacher implements Command {
         CostesWizard step2 = new CostesWizard();
         commandService.run(CostesWizard.class, true).get();
         
+        if (step2.isCancelled()) {
+            log.info("Wizard cancelled by user at step 2");
+            return;
+        }
+        
         settings.useCostes = step2.useCostes;
         settings.nrCostesRandomisations = step2.nrCostesRandomisations;
         settings.psf = step2.psf;
@@ -170,6 +180,11 @@ public class Coloc_Teacher implements Command {
         StatisticsWizard step3 = new StatisticsWizard();
         commandService.run(StatisticsWizard.class, true).get();
         
+        if (step3.isCancelled()) {
+            log.info("Wizard cancelled by user at step 3");
+            return;
+        }
+        
         settings.useLiICQ = step3.useLiICQ;
         settings.useSpearmanRank = step3.useSpearmanRank;
         settings.useManders = step3.useManders;
@@ -179,6 +194,11 @@ public class Coloc_Teacher implements Command {
         log.info("Step 4: Configuring display options...");
         DisplayWizard step4 = new DisplayWizard();
         commandService.run(DisplayWizard.class, true).get();
+        
+        if (step4.isCancelled()) {
+            log.info("Wizard cancelled by user at step 4");
+            return;
+        }
         
         settings.displayImages = step4.displayImages;
         settings.useScatterplot = step4.useScatterplot;

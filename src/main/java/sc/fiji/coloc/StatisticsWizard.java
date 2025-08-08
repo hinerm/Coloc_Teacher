@@ -24,15 +24,25 @@ package sc.fiji.coloc;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.widget.TextWidget;
 
 /**
  * Wizard step 3: Choose statistical methods for colocalization analysis
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 3 of 4 - Statistical Methods")
-public class StatisticsWizard implements Command {
+public class StatisticsWizard extends WizardStep {
 
-    @Parameter(label = "<html><h3>STEP 3 OF 4: STATISTICAL METHODS</h3>" +
+    @Override
+    public int getStepNumber() { return 3; }
+
+    @Override
+    public int getTotalSteps() { return 4; }
+
+    @Override
+    public String getStepTitle() { return "Statistical Methods"; }
+
+    @Override
+    public String getEducationalContent() {
+        return "<html><h3>STEP 3 OF 4: STATISTICAL METHODS</h3>" +
                "<p>Different statistical measures reveal different aspects of colocalization. " +
                "Understanding when to use each method is key to proper analysis.</p>" +
                "<p><b>Correlation-based measures:</b><br>" +
@@ -41,9 +51,8 @@ public class StatisticsWizard implements Command {
                "<p><b>Overlap-based measures:</b><br>" +
                "• <b>Manders' coefficients:</b> Fraction of pixels that overlap<br>" +
                "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
-               "<p><b>Choose the methods appropriate for your research:</b></p></html>", 
-               style = TextWidget.AREA_STYLE)
-    private String info = "";
+               "<p><b>Choose the methods appropriate for your research:</b></p></html>";
+    }
 
     @Parameter(label = "Use Li's ICQ (Intensity Correlation Quotient)", 
                description = "Compares intensity correlation to random distribution")
@@ -60,10 +69,4 @@ public class StatisticsWizard implements Command {
     @Parameter(label = "Use Kendall's tau", 
                description = "Alternative non-parametric correlation coefficient")
     public boolean useKendallTau = true;
-
-    @Override
-    public void run() {
-        // Nothing to do here - parameters are collected by the framework
-        // The main plugin will retrieve these values and continue to next step
-    }
 }
