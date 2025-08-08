@@ -158,39 +158,90 @@ public class Coloc_Teacher implements Command {
      * @throws Exception
      */
     private void runWizard() throws Exception {
-        // Define wizard structure
-        final int totalSteps = 4;
+        // Define wizard structure - total steps depend on user choice
         int currentStep = 1;
+        int totalSteps = 5; // Welcome, Image Setup, Costes, Statistics, Display
 
-        // Synthetic Image Setup
-        log.info("Step " + currentStep + ": Configuring synthetic image parameters...");
-
-        CommandModule syntheticModule;
+        // Step 1: Welcome and choice between synthetic vs user images
+        log.info("Step " + currentStep + ": Welcome to Coloc Teacher...");
+        
+        CommandModule welcomeModule;
         try {
             WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
-            syntheticModule = commandService.run(SyntheticImageWizard.class, true).get();
+            welcomeModule = commandService.run(WelcomeWizard.class, true).get();
         } catch (Exception e) {
             log.info(createCancellationText(currentStep));
             return;
         }
         
         // Check if cancelled
-        if (syntheticModule == null || syntheticModule.isCanceled()) {
+        if (welcomeModule == null || welcomeModule.isCanceled()) {
             log.info(createCancellationText(currentStep));
             return;
         }
         
-        // Get the parameters from the completed wizard step
-        SyntheticImageWizard syntheticResult = (SyntheticImageWizard) syntheticModule.getCommand();
-        settings.setWidth(syntheticResult.width);
-        settings.setHeight(syntheticResult.height);
-        settings.setNumSpots(syntheticResult.numSpots);
-        settings.setSpotRadius(syntheticResult.spotRadius);
-        settings.setOverlapFraction(syntheticResult.overlapFraction);
-        settings.setAddNoise(syntheticResult.addNoise);
-        settings.setNoiseStdDev(syntheticResult.noiseStdDev);
+        // Get the user's choice
+        WelcomeWizard welcomeResult = (WelcomeWizard) welcomeModule.getCommand();
+        boolean useSyntheticImages = welcomeResult.useSyntheticImages;
+        settings.setUseSyntheticImages(useSyntheticImages);
 
-        // Costes Test Setup
+        // Step 2: Image Setup (Synthetic or User Images)
+        currentStep++;
+        
+        if (useSyntheticImages) {
+            // Synthetic Image Setup
+            log.info("Step " + currentStep + ": Configuring synthetic image parameters...");
+
+            CommandModule syntheticModule;
+            try {
+                WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+                syntheticModule = commandService.run(SyntheticImageWizard.class, true).get();
+            } catch (Exception e) {
+                log.info(createCancellationText(currentStep));
+                return;
+            }
+            
+            // Check if cancelled
+            if (syntheticModule == null || syntheticModule.isCanceled()) {
+                log.info(createCancellationText(currentStep));
+                return;
+            }
+            
+            // Get the parameters from the completed wizard step
+            SyntheticImageWizard syntheticResult = (SyntheticImageWizard) syntheticModule.getCommand();
+            settings.setWidth(syntheticResult.width);
+            settings.setHeight(syntheticResult.height);
+            settings.setNumSpots(syntheticResult.numSpots);
+            settings.setSpotRadius(syntheticResult.spotRadius);
+            settings.setOverlapFraction(syntheticResult.overlapFraction);
+            settings.setAddNoise(syntheticResult.addNoise);
+            settings.setNoiseStdDev(syntheticResult.noiseStdDev);
+        } else {
+            // User Image Selection
+            log.info("Step " + currentStep + ": Selecting your images for analysis...");
+
+            CommandModule imageSelectionModule;
+            try {
+                WizardStep.PROGRESS_MESSAGE = createProgressText(currentStep, totalSteps);
+                imageSelectionModule = commandService.run(ImageSelectionWizard.class, true).get();
+            } catch (Exception e) {
+                log.info(createCancellationText(currentStep));
+                return;
+            }
+            
+            // Check if cancelled
+            if (imageSelectionModule == null || imageSelectionModule.isCanceled()) {
+                log.info(createCancellationText(currentStep));
+                return;
+            }
+            
+            // Get the selected images
+            ImageSelectionWizard imageResult = (ImageSelectionWizard) imageSelectionModule.getCommand();
+            settings.setUserChannel1Image(imageResult.channel1Image);
+            settings.setUserChannel2Image(imageResult.channel2Image);
+        }
+
+        // Step 3: Costes Test Setup
         currentStep++;
         log.info("Step " + currentStep + ": Configuring Costes significance test...");
 
@@ -215,7 +266,7 @@ public class Coloc_Teacher implements Command {
         settings.setPsf(costesResult.psf);
         settings.setDisplayShuffledCostes(costesResult.displayShuffledCostes);
 
-        // Statistical Methods
+        // Step 4: Statistical Methods
         currentStep++;
         log.info("Step " + currentStep + ": Selecting statistical methods...");
 
@@ -240,7 +291,8 @@ public class Coloc_Teacher implements Command {
         settings.setUseManders(statsResult.useManders);
         settings.setUseKendallTau(statsResult.useKendallTau);
 
-        // Display Options
+        // Step 5: Display Options
+        currentStep++;
         log.info("Step " + currentStep + ": Configuring display options...");
 
         CommandModule displayModule;
@@ -272,10 +324,15 @@ public class Coloc_Teacher implements Command {
      */
     private void executeAnalysis() {
         try {
-            log.info("Generating synthetic colocalization test images...");
-            
-            // Generate synthetic images using settings
-            generateSyntheticImages();
+            if (settings.isUseSyntheticImages()) {
+                log.info("Generating synthetic colocalization test images...");
+                // Generate synthetic images using settings
+                generateSyntheticImages();
+            } else {
+                log.info("Using user-provided images for colocalization analysis...");
+                // Convert user images to datasets
+                convertUserImages();
+            }
 
             // Run colocalization analysis
             runColocalizationAnalysis();
@@ -359,6 +416,39 @@ public class Coloc_Teacher implements Command {
             log.info("Adding Gaussian noise with standard deviation: " + settings.getNoiseStdDev());
             addGaussianNoise(img1, settings.getNoiseStdDev(), rand);
             addGaussianNoise(img2, settings.getNoiseStdDev(), rand);
+        }
+    }
+
+    /**
+     * Converts user-provided ImagePlus objects to Dataset objects for analysis.
+     */
+    private void convertUserImages() {
+        if (settings.getUserChannel1Image() == null || settings.getUserChannel2Image() == null) {
+            throw new IllegalArgumentException("Both channel images must be selected for analysis");
+        }
+
+        try {
+            // Convert ImagePlus to Dataset using the convert service
+            channel1 = convertService.convert(settings.getUserChannel1Image(), Dataset.class);
+            channel2 = convertService.convert(settings.getUserChannel2Image(), Dataset.class);
+
+            if (channel1 == null || channel2 == null) {
+                throw new RuntimeException("Failed to convert ImagePlus to Dataset");
+            }
+
+            // Validate that the images have compatible dimensions
+            if (channel1.dimension(0) != channel2.dimension(0) || 
+                channel1.dimension(1) != channel2.dimension(1)) {
+                throw new IllegalArgumentException("Images must have the same dimensions. " +
+                    "Channel 1: " + channel1.dimension(0) + "×" + channel1.dimension(1) + 
+                    ", Channel 2: " + channel2.dimension(0) + "×" + channel2.dimension(1));
+            }
+
+            log.info("Successfully converted user images to datasets for analysis");
+            log.info("Image dimensions: " + channel1.dimension(0) + "×" + channel1.dimension(1));
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error converting user images: " + e.getMessage(), e);
         }
     }
 

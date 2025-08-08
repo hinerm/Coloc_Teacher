@@ -21,6 +21,8 @@
  */
 package sc.fiji.coloc;
 
+import ij.ImagePlus;
+
 /**
  * Configuration settings for the Coloc Teacher wizard.
  * 
@@ -31,6 +33,17 @@ package sc.fiji.coloc;
  * @author Mark Hiner
  */
 public class WizardSettings {
+    
+    // === Wizard Flow Parameters ===
+    
+    /** Whether to use synthetic images (true) or user-provided images (false) */
+    private boolean useSyntheticImages = true;
+    
+    /** User-selected channel 1 image (only used when useSyntheticImages is false) */
+    private ImagePlus userChannel1Image;
+    
+    /** User-selected channel 2 image (only used when useSyntheticImages is false) */
+    private ImagePlus userChannel2Image;
     
     // === Synthetic Image Parameters ===
     
@@ -172,6 +185,32 @@ public class WizardSettings {
     }
     
     // === Getters and Setters ===
+    
+    // Wizard Flow Parameters
+    
+    public boolean isUseSyntheticImages() {
+        return useSyntheticImages;
+    }
+    
+    public void setUseSyntheticImages(boolean useSyntheticImages) {
+        this.useSyntheticImages = useSyntheticImages;
+    }
+    
+    public ImagePlus getUserChannel1Image() {
+        return userChannel1Image;
+    }
+    
+    public void setUserChannel1Image(ImagePlus userChannel1Image) {
+        this.userChannel1Image = userChannel1Image;
+    }
+    
+    public ImagePlus getUserChannel2Image() {
+        return userChannel2Image;
+    }
+    
+    public void setUserChannel2Image(ImagePlus userChannel2Image) {
+        this.userChannel2Image = userChannel2Image;
+    }
     
     // Synthetic Image Parameters
     
