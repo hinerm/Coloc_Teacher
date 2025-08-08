@@ -2,6 +2,22 @@
 
 *A conversation between hinerm and GitHub Copilot about building an educational colocalization analysis plugin for Fiji/ImageJ*
 
+## 📚 Table of Contents
+
+### 🔬 Phase 1: Script Development
+- [Exploring Fiji's Colocalization Options](#exploring-fijis-colocalization-options)
+- [Creating Educational Demo Scripts](#creating-educational-demo-scripts)
+- [Synthetic Image Generation](#synthetic-image-generation)
+- [Parameter Optimization](#parameter-optimization)
+- [Results Interpretation](#results-interpretation)
+
+### 🧩 Phase 2: Plugin Development
+- [Plugin Architecture Planning](#plugin-architecture-planning)
+- [Java Plugin Implementation](#java-plugin-implementation)
+- [Wizard Interface Development](#wizard-interface-development)
+- [Testing and Validation](#testing-and-validation)
+- [Documentation and Finalization](#documentation-and-finalization)
+
 ---
 
 **📅 Session Overview**
@@ -10,6 +26,8 @@
 - **Outcome**: Full Coloc Teacher plugin with wizard interface
 
 ---
+
+## Exploring Fijis Colocalization Options
 
 
 ---
@@ -1482,12 +1500,11 @@ Made changes.
 >
 > This makes the interpretation guide complete for all the major statistical measures that can be calculated by Coloc2!
 
-
 ---
 
-### 🧑‍💻 **hinerm**
+## Plugin Architecture Planning
 
-> > I want to translate my script to a full Fiji Java plugin. I'm going to call it Coloc_Teacher. I want to put it in a new GitHub repository. Can you use the existing Colocalisation_Analysis plugin as a template to create the directory structure and boilerplate files that I need?
+### 🧑‍💻 **hinerm**> > I want to translate my script to a full Fiji Java plugin. I'm going to call it Coloc_Teacher. I want to put it in a new GitHub repository. Can you use the existing Colocalisation_Analysis plugin as a template to create the directory structure and boilerplate files that I need?
 
 
 ---
