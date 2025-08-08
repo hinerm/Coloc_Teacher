@@ -43,18 +43,18 @@ public class CostesWizard extends WizardStep {
 
     @Override
     public String getEducationalContent() {
-        return "<html><h3>STEP 2 OF 4: COSTES SIGNIFICANCE TEST</h3>" +
-               "<p>The Costes test determines if the colocalization you observe is statistically significant " +
-               "or could have occurred by chance.</p>" +
+        return "<html><p>The Costes significance test determines if colocalization is statistically significant " +
+               "by comparing your data to randomized versions.</p>" +
                "<p><b>How it works:</b><br>" +
-               "• Creates randomized versions of your images<br>" +
-               "• Calculates correlation for each randomized pair<br>" +
-               "• Compares your real correlation to the random distribution<br>" +
-               "• Provides a P-value for statistical significance</p>" +
-               "<p><b>Interpretation:</b><br>" +
-               "• P < 0.05: Colocalization is statistically significant<br>" +
-               "• P > 0.05: Colocalization might be due to chance</p>" +
-               "<p><b>Choose your parameters:</b></p></html>";
+               "1. Scrambles one channel while keeping the other intact<br>" +
+               "2. Calculates colocalization on scrambled data<br>" +
+               "3. Repeats this many times to build a distribution<br>" +
+               "4. Compares your real data to this 'random' distribution</p>" +
+               "<p><b>Key Parameters:</b><br>" +
+               "• <b>Randomizations:</b> More = better statistics but slower<br>" +
+               "• <b>PSF:</b> Point Spread Function width (affects scrambling)<br>" +
+               "• <b>Display shuffled:</b> Show examples of randomized data</p>" +
+               "<p><b>Configure significance testing:</b></p></html>";
     }
 
     @Parameter(label = "Perform Costes significance test", 

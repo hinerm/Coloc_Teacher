@@ -53,6 +53,13 @@ public abstract class WizardStep implements Command {
     }
 
     /**
+     * Set cancellation status
+     */
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
      * Check if the wizard step was cancelled
      * @return true if cancelled, false otherwise
      */

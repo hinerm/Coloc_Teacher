@@ -42,8 +42,7 @@ public class StatisticsWizard extends WizardStep {
 
     @Override
     public String getEducationalContent() {
-        return "<html><h3>STEP 3 OF 4: STATISTICAL METHODS</h3>" +
-               "<p>Different statistical measures reveal different aspects of colocalization. " +
+        return "<html><p>Different statistical measures reveal different aspects of colocalization. " +
                "Understanding when to use each method is key to proper analysis.</p>" +
                "<p><b>Correlation-based measures:</b><br>" +
                "• <b>Spearman's rank:</b> Non-parametric correlation, robust to outliers<br>" +

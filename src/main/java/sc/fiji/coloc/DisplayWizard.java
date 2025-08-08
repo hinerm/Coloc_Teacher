@@ -42,8 +42,7 @@ public class DisplayWizard extends WizardStep {
 
     @Override
     public String getEducationalContent() {
-        return "<html><h3>STEP 4 OF 4: DISPLAY AND VISUALIZATION OPTIONS</h3>" +
-               "<p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
+        return "<html><p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
                "<p><b>Display options:</b><br>" +
                "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
                "• <b>Generate scatterplot:</b> 2D histogram of pixel intensities</p>" +

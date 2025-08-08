@@ -21,6 +21,7 @@
  */
 package sc.fiji.coloc;
 
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -31,6 +32,10 @@ import org.scijava.widget.NumberWidget;
  */
 @Plugin(type = Command.class, name = "Coloc Teacher: Step 1 of 4 - Synthetic Image Setup")
 public class SyntheticImageWizard extends WizardStep {
+
+    // Test mode parameter - when true, skips dialog and uses default values
+    @Parameter(required = false, persist = false, visibility = ItemVisibility.INVISIBLE)
+    private boolean testMode = false;
 
     @Override
     public int getStepNumber() { return 1; }
@@ -43,8 +48,7 @@ public class SyntheticImageWizard extends WizardStep {
 
     @Override
     public String getEducationalContent() {
-        return "<html><h3>STEP 1 OF 4: SYNTHETIC IMAGE GENERATION</h3>" +
-               "<p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
+        return "<html><p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
                "This controlled approach lets you:</p>" +
                "<ul>" +
                "<li>Know the ground truth (actual overlap)</li>" +

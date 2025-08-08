@@ -40,6 +40,7 @@ import org.scijava.command.Command;
 import org.scijava.command.CommandService;
 import org.scijava.convert.ConvertService;
 import org.scijava.log.LogService;
+import org.scijava.module.ModuleService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
@@ -71,6 +72,9 @@ public class Coloc_Teacher implements Command {
 
     @Parameter
     private CommandService commandService;
+
+    @Parameter  
+    private ModuleService moduleService;
 
     // Test mode parameter - when true, skips wizard and uses default values
     // This is only for automated testing and should never be visible to users
@@ -144,9 +148,10 @@ public class Coloc_Teacher implements Command {
         // Step 1: Synthetic Image Setup
         log.info("Step 1: Configuring synthetic image parameters...");
         SyntheticImageWizard step1 = new SyntheticImageWizard();
-        commandService.run(SyntheticImageWizard.class, true).get();
         
-        if (step1.isCancelled()) {
+        try {
+            commandService.run(SyntheticImageWizard.class, true, "testMode", false).get();
+        } catch (Exception e) {
             log.info("Wizard cancelled by user at step 1");
             return;
         }
@@ -163,9 +168,10 @@ public class Coloc_Teacher implements Command {
         // Step 2: Costes Test Setup
         log.info("Step 2: Configuring Costes significance test...");
         CostesWizard step2 = new CostesWizard();
-        commandService.run(CostesWizard.class, true).get();
         
-        if (step2.isCancelled()) {
+        try {
+            commandService.run(CostesWizard.class, true, "testMode", false).get();
+        } catch (Exception e) {
             log.info("Wizard cancelled by user at step 2");
             return;
         }
@@ -178,9 +184,10 @@ public class Coloc_Teacher implements Command {
         // Step 3: Statistical Methods
         log.info("Step 3: Selecting statistical methods...");
         StatisticsWizard step3 = new StatisticsWizard();
-        commandService.run(StatisticsWizard.class, true).get();
         
-        if (step3.isCancelled()) {
+        try {
+            commandService.run(StatisticsWizard.class, true, "testMode", false).get();
+        } catch (Exception e) {
             log.info("Wizard cancelled by user at step 3");
             return;
         }
@@ -193,9 +200,10 @@ public class Coloc_Teacher implements Command {
         // Step 4: Display Options
         log.info("Step 4: Configuring display options...");
         DisplayWizard step4 = new DisplayWizard();
-        commandService.run(DisplayWizard.class, true).get();
         
-        if (step4.isCancelled()) {
+        try {
+            commandService.run(DisplayWizard.class, true, "testMode", false).get();
+        } catch (Exception e) {
             log.info("Wizard cancelled by user at step 4");
             return;
         }
