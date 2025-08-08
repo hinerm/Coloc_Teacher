@@ -100,17 +100,17 @@ public class Coloc_TeacherTest {
         plugin.run();
         
         // Test settings access
-        Coloc_Teacher.WizardSettings settings = plugin.getSettings();
+        WizardSettings settings = plugin.getSettings();
         assertNotNull("Settings should be accessible", settings);
         
         // Verify default settings values
-        assertEquals("Default number of spots", 50, settings.numSpots);
-        assertEquals("Default spot radius", 5.0, settings.spotRadius, 0.01);
-        assertEquals("Default overlap fraction", 0.7, settings.overlapFraction, 0.01);
-        assertEquals("Default image width", 256, settings.width);
-        assertEquals("Default image height", 256, settings.height);
-        assertTrue("Noise should be enabled by default", settings.addNoise);
-        assertEquals("Default noise std dev", 10.0, settings.noiseStdDev, 0.01);
+        assertEquals("Default number of spots", 50, settings.getNumSpots());
+        assertEquals("Default spot radius", 5.0, settings.getSpotRadius(), 0.01);
+        assertEquals("Default overlap fraction", 0.7, settings.getOverlapFraction(), 0.01);
+        assertEquals("Default image width", 256, settings.getWidth());
+        assertEquals("Default image height", 256, settings.getHeight());
+        assertTrue("Noise should be enabled by default", settings.isAddNoise());
+        assertEquals("Default noise std dev", 10.0, settings.getNoiseStdDev(), 0.01);
     }
     
     @Test
