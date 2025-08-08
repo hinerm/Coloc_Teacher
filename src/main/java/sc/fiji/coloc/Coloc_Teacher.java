@@ -267,6 +267,9 @@ public class Coloc_Teacher implements Command {
         executeAnalysis();
     }
 
+    /**
+     * Executes the analysis with the collected settings.
+     */
     private void executeAnalysis() {
         try {
             log.info("Generating synthetic colocalization test images...");
@@ -290,6 +293,9 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Generates synthetic images based on the current settings.
+     */
     private void generateSyntheticImages() {
         Random rand = new Random();
 
@@ -356,6 +362,11 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Adds a background intensity to the entire image.
+     * @param img the image to modify
+     * @param value the background intensity value
+     */
     private void addBackground(Img<FloatType> img, float value) {
         Cursor<FloatType> cursor = img.cursor();
         while (cursor.hasNext()) {
@@ -363,6 +374,14 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Adds a Gaussian-like spot to the image.
+     * @param img the image to modify
+     * @param centerX the x-coordinate of the spot center
+     * @param centerY the y-coordinate of the spot center
+     * @param intensity the intensity of the spot
+     * @param radius the radius of the spot
+     */
     private void addGaussianSpot(Img<FloatType> img, int centerX, int centerY, 
                                  float intensity, double radius) {
         RandomAccess<FloatType> ra = img.randomAccess();
@@ -387,6 +406,11 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Clamps the pixel intensities in the image to a maximum value.
+     * @param img the image to modify
+     * @param maxValue the maximum intensity value
+     */
     private void clampIntensities(Img<FloatType> img, float maxValue) {
         Cursor<FloatType> cursor = img.cursor();
         while (cursor.hasNext()) {
@@ -397,6 +421,12 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Adds Gaussian noise to the image.
+     * @param img the image to modify
+     * @param stdDev the standard deviation of the Gaussian noise
+     * @param rand a Random object for generating noise
+     */
     private void addGaussianNoise(Img<FloatType> img, double stdDev, Random rand) {
         Cursor<FloatType> cursor = img.cursor();
         while (cursor.hasNext()) {
@@ -408,6 +438,9 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Runs the colocalization analysis.
+     */
     private void runColocalizationAnalysis() {
         log.info("Running colocalization analysis...");
         
@@ -482,7 +515,11 @@ public class Coloc_Teacher implements Command {
         }
     }
 
+    /**
+     * Generates a guide for interpreting Coloc_2 results.
+     */
     private void generateInterpretationGuide() {
+        //TODO could customize this based on results of wizard
         StringBuilder sb = new StringBuilder();
         sb.append("============================================================\n");
         sb.append("HOW TO INTERPRET COLOC2 RESULTS\n");
