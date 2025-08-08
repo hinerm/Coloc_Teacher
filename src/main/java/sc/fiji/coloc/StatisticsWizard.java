@@ -1,8 +1,8 @@
 /*-
  * #%L
- * ImageJ2 plugin for teaching colocalization analysis.
+ * Educational Fiji plugin for teaching colocalization analysis with synthetic data generation and guided interpretation.
  * %%
- * Copyright (C) 2025 ImageJ2 developers.
+ * Copyright (C) 2025 ImageJ Developers
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as

@@ -1,8 +1,8 @@
 /*-
  * #%L
- * Educational Fiji plugin for teaching colocalization analysis.
+ * Educational Fiji plugin for teaching colocalization analysis with synthetic data generation and guided interpretation.
  * %%
- * Copyright (C) 2025 Mark Hiner.
+ * Copyright (C) 2025 ImageJ Developers
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -10,13 +10,7 @@
  * License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without eve        sb.append("\nSYNTHETIC DATA PARAMETERS USED:\n");
-        sb.append("• Number of spots: " + settings.getNumSpots() + "\n");
-        sb.append("• Spot radius: " + settings.getSpotRadius() + " pixels\n");
-        sb.append("• Overlap fraction: " + (settings.getOverlapFraction() * 100) + "%\n");
-        sb.append("• Expected colocalization: " + 
-                 (settings.getOverlapFraction() > 0.7 ? "High" : 
-                  settings.getOverlapFraction() > 0.3 ? "Moderate" : "Low") + "\n");mplied warranty of
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
