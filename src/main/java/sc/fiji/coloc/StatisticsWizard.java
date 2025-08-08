@@ -21,7 +21,6 @@
  */
 package sc.fiji.coloc;
 
-import org.scijava.ItemIO;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -30,34 +29,21 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step 3: Choose statistical methods for colocalization analysis
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 3 - Statistical Methods")
+@Plugin(type = Command.class, name = "Coloc Teacher: Step 3 of 4 - Statistical Methods")
 public class StatisticsWizard implements Command {
 
-    @Parameter(label = "Educational Information", type = ItemIO.OUTPUT, 
-               style = TextWidget.AREA_STYLE, 
-               description = "Read-only information about colocalization statistics")
-    private String info = 
-        "STEP 3: STATISTICAL METHODS\n\n" +
-        "Different statistical measures reveal different aspects of colocalization.\n" +
-        "Understanding when to use each method is key to proper analysis.\n\n" +
-        "CORRELATION-BASED MEASURES:\n" +
-        "• Pearson's R: Linear correlation (-1 to +1)\n" +
-        "  - Best for: Linear relationships, normally distributed data\n" +
-        "  - Sensitive to: Outliers, non-linear relationships\n\n" +
-        "• Spearman's rank correlation: Non-parametric correlation\n" +
-        "  - Best for: Non-linear relationships, any distribution\n" +
-        "  - Robust to: Outliers, non-normal data\n\n" +
-        "• Kendall's tau: Alternative non-parametric correlation\n" +
-        "  - Best for: Small datasets, tied values\n" +
-        "  - More robust than Spearman for small samples\n\n" +
-        "OVERLAP-BASED MEASURES:\n" +
-        "• Manders' coefficients: Fraction of pixels that overlap\n" +
-        "  - Best for: Quantifying actual spatial overlap\n" +
-        "  - Independent of: Correlation, intensity relationships\n\n" +
-        "• Li's ICQ: Intensity correlation quotient\n" +
-        "  - Best for: Comparing to random distribution\n" +
-        "  - Values: -0.5 (segregation) to +0.5 (colocalization)\n\n" +
-        "Choose the methods appropriate for your research question:";
+    @Parameter(label = "<html><h3>STEP 3 OF 4: STATISTICAL METHODS</h3>" +
+               "<p>Different statistical measures reveal different aspects of colocalization. " +
+               "Understanding when to use each method is key to proper analysis.</p>" +
+               "<p><b>Correlation-based measures:</b><br>" +
+               "• <b>Spearman's rank:</b> Non-parametric correlation, robust to outliers<br>" +
+               "• <b>Kendall's tau:</b> Alternative non-parametric correlation for small datasets</p>" +
+               "<p><b>Overlap-based measures:</b><br>" +
+               "• <b>Manders' coefficients:</b> Fraction of pixels that overlap<br>" +
+               "• <b>Li's ICQ:</b> Intensity correlation quotient vs. random distribution</p>" +
+               "<p><b>Choose the methods appropriate for your research:</b></p></html>", 
+               style = TextWidget.AREA_STYLE)
+    private String info = "";
 
     @Parameter(label = "Use Li's ICQ (Intensity Correlation Quotient)", 
                description = "Compares intensity correlation to random distribution")

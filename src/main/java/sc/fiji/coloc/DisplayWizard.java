@@ -21,7 +21,6 @@
  */
 package sc.fiji.coloc;
 
-import org.scijava.ItemIO;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -30,30 +29,23 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step 4: Configure display and visualization options
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 4 - Display Options")
+@Plugin(type = Command.class, name = "Coloc Teacher: Step 4 of 4 - Display Options")
 public class DisplayWizard implements Command {
 
-    @Parameter(label = "Educational Information", type = ItemIO.OUTPUT, 
-               style = TextWidget.AREA_STYLE, 
-               description = "Read-only information about display options")
-    private String info = 
-        "STEP 4: DISPLAY AND VISUALIZATION OPTIONS\n\n" +
-        "Visual outputs help you understand and validate your colocalization analysis.\n\n" +
-        "DISPLAY OPTIONS:\n" +
-        "• Show intermediate images: Display threshold images, masks, etc.\n" +
-        "  - Useful for: Understanding how the analysis works\n" +
-        "  - Shows: Binary masks, threshold results, intermediate steps\n\n" +
-        "• Generate scatterplot: 2D histogram of pixel intensities\n" +
-        "  - Useful for: Visualizing pixel-by-pixel correlation\n" +
-        "  - Shows: Channel 1 vs Channel 2 intensity relationship\n" +
-        "  - Pattern indicates: Linear correlation, outliers, data quality\n\n" +
-        "INTERPRETING SCATTERPLOTS:\n" +
-        "• Diagonal line: Perfect positive correlation\n" +
-        "• Horizontal/vertical spread: Poor correlation\n" +
-        "• Tight cluster: Good correlation in that intensity range\n" +
-        "• Outliers: May indicate artifacts or interesting biology\n\n" +
-        "For teaching purposes, it's recommended to show all visualizations\n" +
-        "to better understand how the algorithms work:";
+    @Parameter(label = "<html><h3>STEP 4 OF 4: DISPLAY AND VISUALIZATION OPTIONS</h3>" +
+               "<p>Visual outputs help you understand and validate your colocalization analysis.</p>" +
+               "<p><b>Display options:</b><br>" +
+               "• <b>Show intermediate images:</b> Display threshold images, masks, processing steps<br>" +
+               "• <b>Generate scatterplot:</b> 2D histogram of pixel intensities</p>" +
+               "<p><b>Interpreting scatterplots:</b><br>" +
+               "• Diagonal line pattern = positive correlation<br>" +
+               "• Horizontal/vertical spread = poor correlation<br>" +
+               "• Tight clusters = good correlation in that intensity range</p>" +
+               "<p>For teaching purposes, it's recommended to show all visualizations " +
+               "to better understand how the algorithms work.</p>" +
+               "<p><b>Choose your display preferences:</b></p></html>", 
+               style = TextWidget.AREA_STYLE)
+    private String info = "";
 
     @Parameter(label = "Display intermediate images", 
                description = "Show threshold images and processing steps")

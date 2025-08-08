@@ -21,7 +21,6 @@
  */
 package sc.fiji.coloc;
 
-import org.scijava.ItemIO;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -31,29 +30,23 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step 2: Configure Costes significance test parameters
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 2 - Costes Significance Test")
+@Plugin(type = Command.class, name = "Coloc Teacher: Step 2 of 4 - Costes Significance Test")
 public class CostesWizard implements Command {
 
-    @Parameter(label = "Educational Information", type = ItemIO.OUTPUT, 
-               style = TextWidget.AREA_STYLE, 
-               description = "Read-only information about Costes significance testing")
-    private String info = 
-        "STEP 2: COSTES SIGNIFICANCE TEST\n\n" +
-        "The Costes test determines if the colocalization you observe is statistically significant\n" +
-        "or could have occurred by chance.\n\n" +
-        "HOW IT WORKS:\n" +
-        "• Creates randomized versions of your images\n" +
-        "• Calculates correlation for each randomized pair\n" +
-        "• Compares your real correlation to the random distribution\n" +
-        "• Provides a P-value for statistical significance\n\n" +
-        "INTERPRETATION:\n" +
-        "• P < 0.05: Colocalization is statistically significant\n" +
-        "• P > 0.05: Colocalization might be due to chance\n\n" +
-        "PARAMETERS:\n" +
-        "• Number of randomizations: More = more accurate P-value (but slower)\n" +
-        "• PSF (Point Spread Function): Accounts for optical blur\n" +
-        "• Display shuffled images: Shows examples of randomized data\n\n" +
-        "Recommendations: Use at least 100 randomizations for reliable statistics:";
+    @Parameter(label = "<html><h3>STEP 2 OF 4: COSTES SIGNIFICANCE TEST</h3>" +
+               "<p>The Costes test determines if the colocalization you observe is statistically significant " +
+               "or could have occurred by chance.</p>" +
+               "<p><b>How it works:</b><br>" +
+               "• Creates randomized versions of your images<br>" +
+               "• Calculates correlation for each randomized pair<br>" +
+               "• Compares your real correlation to the random distribution<br>" +
+               "• Provides a P-value for statistical significance</p>" +
+               "<p><b>Interpretation:</b><br>" +
+               "• P < 0.05: Colocalization is statistically significant<br>" +
+               "• P > 0.05: Colocalization might be due to chance</p>" +
+               "<p><b>Choose your parameters:</b></p></html>", 
+               style = TextWidget.AREA_STYLE)
+    private String info = "";
 
     @Parameter(label = "Perform Costes significance test", 
                description = "Statistical test for significance of colocalization")

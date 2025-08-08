@@ -21,7 +21,6 @@
  */
 package sc.fiji.coloc;
 
-import org.scijava.ItemIO;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -31,28 +30,25 @@ import org.scijava.widget.TextWidget;
 /**
  * Wizard step 1: Configure synthetic image parameters
  */
-@Plugin(type = Command.class, name = "Coloc Teacher: Step 1 - Synthetic Image Setup")
+@Plugin(type = Command.class, name = "Coloc Teacher: Step 1 of 4 - Synthetic Image Setup")
 public class SyntheticImageWizard implements Command {
 
-    @Parameter(label = "Educational Information", type = ItemIO.OUTPUT, 
-               style = TextWidget.AREA_STYLE, 
-               description = "Read-only information about synthetic image generation")
-    private String info = 
-        "STEP 1: SYNTHETIC IMAGE GENERATION\n\n" +
-        "We'll create two synthetic fluorescence images to practice colocalization analysis.\n" +
-        "This controlled approach lets you:\n" +
-        "• Know the ground truth (actual overlap)\n" +
-        "• Test how different parameters affect results\n" +
-        "• Learn to interpret colocalization statistics\n\n" +
-        "IMAGE PARAMETERS:\n" +
-        "• Width/Height: Image dimensions in pixels\n" +
-        "• Number of spots: How many fluorescent objects to simulate\n" +
-        "• Spot radius: Size of each fluorescent spot\n" +
-        "• Overlap fraction: What percentage of spots overlap between channels\n" +
-        "  - 0.0 = No overlap (perfect segregation)\n" +
-        "  - 0.5 = Half the spots overlap\n" +
-        "  - 1.0 = Perfect overlap (complete colocalization)\n\n" +
-        "Adjust these parameters to create different colocalization scenarios:";
+    @Parameter(label = "<html><h3>STEP 1 OF 4: SYNTHETIC IMAGE GENERATION</h3>" +
+               "<p>We'll create two synthetic fluorescence images to practice colocalization analysis. " +
+               "This controlled approach lets you:</p>" +
+               "<ul>" +
+               "<li>Know the ground truth (actual overlap)</li>" +
+               "<li>Test how different parameters affect results</li>" +
+               "<li>Learn to interpret colocalization statistics</li>" +
+               "</ul>" +
+               "<p><b>Key Parameters:</b><br>" +
+               "• <b>Overlap fraction:</b> What percentage of spots overlap between channels<br>" +
+               "&nbsp;&nbsp;- 0.0 = No overlap (perfect segregation)<br>" +
+               "&nbsp;&nbsp;- 0.5 = Half the spots overlap<br>" +
+               "&nbsp;&nbsp;- 1.0 = Perfect overlap (complete colocalization)</p>" +
+               "<p><b>Configure your synthetic images:</b></p></html>", 
+               style = TextWidget.AREA_STYLE)
+    private String info = "";
 
     @Parameter(label = "Image width (pixels)", min = "64", max = "1024", 
                style = NumberWidget.SPINNER_STYLE, stepSize = "32")

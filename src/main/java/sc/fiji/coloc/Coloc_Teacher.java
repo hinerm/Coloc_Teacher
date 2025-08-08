@@ -1,4 +1,4 @@
-﻿/*-
+/*-
  * #%L
  * Educational Fiji plugin for teaching colocalization analysis.
  * %%
@@ -268,6 +268,13 @@ public class Coloc_Teacher implements Command {
         // Clamp intensities
         clampIntensities(img1, settings.maxIntensity + settings.baseIntensity);
         clampIntensities(img2, settings.maxIntensity + settings.baseIntensity);
+        
+        // Add noise if requested
+        if (settings.addNoise && settings.noiseStdDev > 0) {
+            log.info("Adding Gaussian noise with standard deviation: " + settings.noiseStdDev);
+            addGaussianNoise(img1, settings.noiseStdDev, rand);
+            addGaussianNoise(img2, settings.noiseStdDev, rand);
+        }
     }
 
     private void addBackground(Img<FloatType> img, float value) {
@@ -308,6 +315,17 @@ public class Coloc_Teacher implements Command {
             if (pixel.get() > maxValue) {
                 pixel.set(maxValue);
             }
+        }
+    }
+
+    private void addGaussianNoise(Img<FloatType> img, double stdDev, Random rand) {
+        Cursor<FloatType> cursor = img.cursor();
+        while (cursor.hasNext()) {
+            FloatType pixel = cursor.next();
+            double noise = rand.nextGaussian() * stdDev;
+            float newValue = pixel.get() + (float) noise;
+            // Ensure non-negative values
+            pixel.set(Math.max(0, newValue));
         }
     }
 
