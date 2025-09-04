@@ -76,6 +76,11 @@ Coloc Teacher is an educational plugin that extends the functionality of Fiji's 
 
 ## Installation
 
+### Via update site
+
+1. This plugin is available from an [a new update site](https://imagej.net/update-sites/following) (currently unlisted): https://sites.imagej.net/Coloc-Teacher/
+
+### From source
 1. Download the compiled JAR file
 2. Copy it to your Fiji plugins folder (`Fiji.app/plugins/`)
 3. Restart Fiji
